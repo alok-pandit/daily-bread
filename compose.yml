@@ -1,0 +1,59 @@
+services:
+  postgres:
+    image: postgres:16
+    network_mode: "host"
+    restart: unless-stopped
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: db
+    command:
+      - "postgres"
+      - "-c"
+      - "wal_level=logical"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  db-scylla:
+    image: scylladb/scylla
+    network_mode: "host"
+    container_name: db-scylla
+    volumes:
+      - type: volume
+        source: target
+        target: /var/lib/scylla
+        volume:
+          nocopy: true
+
+  db-scylla2:
+    image: scylladb/scylla
+    container_name: db-scylla2
+    network_mode: "host"
+    command: --seeds=db-scylla
+    volumes:
+      - type: volume
+        source: target
+        target: /var/lib/scylla
+        volume:
+          nocopy: true
+
+  db-scylla3:
+    image: scylladb/scylla
+    container_name: db-scylla3
+    network_mode: "host"
+    command: --seeds=db-scylla
+    volumes:
+      - type: volume
+        source: target
+        target: /var/lib/scylla
+        volume:
+          nocopy: true
+
+volumes:
+  postgres-data: ~
+  target: ~
