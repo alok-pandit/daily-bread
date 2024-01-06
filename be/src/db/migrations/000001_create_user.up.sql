@@ -1,7 +1,7 @@
 CREATE TABLE
   IF NOT EXISTS users (
-    id varchar PRIMARY KEY NOT NULL,
-    full_name varchar NOT NULL DEFAULT '',
-    username varchar UNIQUE NOT NULL,
+    id VARCHAR PRIMARY KEY NOT NULL UNIQUE,
+    fullname VARCHAR NOT NULL DEFAULT '',
+    username VARCHAR UNIQUE NOT NULL UNIQUE,
     password VARCHAR NOT NULL
   );

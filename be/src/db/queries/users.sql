@@ -1,7 +1,6 @@
 -- users.sql
--- name: GetUsers :one
+-- name: GetUser :one
 SELECT
-  username,
   id,
   password
 FROM
@@ -10,18 +9,28 @@ WHERE
   username = $1;
 
 
+-- name: GetUserByID :one
+SELECT
+  username,
+  fullname,
+  password
+FROM
+  users
+WHERE
+  id = $1;
+
 -- name: ListUers :many
 SELECT
   *
 FROM
   users
 ORDER BY
-  full_name;
+  fullname;
 
 
 -- name: CreateUser :exec
 INSERT INTO
-  users (id, full_name, username, PASSWORD)
+  users (id, fullname, username, PASSWORD)
 VALUES
   ($1, $2, $3, $4);
 

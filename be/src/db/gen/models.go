@@ -8,7 +8,7 @@ import ()
 
 type User struct {
 	ID       string `db:"id" json:"id"`
-	FullName string `db:"full_name" json:"fullName"`
+	Fullname string `db:"fullname" json:"fullname"`
 	Username string `db:"username" json:"username"`
 	Password string `db:"password" json:"password"`
 }

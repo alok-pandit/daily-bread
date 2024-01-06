@@ -11,14 +11,14 @@ import (
 
 const createUser = `-- name: CreateUser :exec
 INSERT INTO
-  users (id, full_name, username, PASSWORD)
+  users (id, fullname, username, PASSWORD)
 VALUES
   ($1, $2, $3, $4)
 `
 
 type CreateUserParams struct {
 	ID       string `db:"id" json:"id"`
-	FullName string `db:"full_name" json:"fullName"`
+	Fullname string `db:"fullname" json:"fullname"`
 	Username string `db:"username" json:"username"`
 	Password string `db:"password" json:"password"`
 }
@@ -26,7 +26,7 @@ type CreateUserParams struct {
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) error {
 	_, err := q.db.Exec(ctx, createUser,
 		arg.ID,
-		arg.FullName,
+		arg.Fullname,
 		arg.Username,
 		arg.Password,
 	)
@@ -45,9 +45,8 @@ func (q *Queries) DeleteUser(ctx context.Context, id string) error {
 	return err
 }
 
-const getUsers = `-- name: GetUsers :one
+const getUser = `-- name: GetUser :one
 SELECT
-  username,
   id,
   password
 FROM
@@ -56,27 +55,50 @@ WHERE
   username = $1
 `
 
-type GetUsersRow struct {
-	Username string `db:"username" json:"username"`
+type GetUserRow struct {
 	ID       string `db:"id" json:"id"`
 	Password string `db:"password" json:"password"`
 }
 
 // users.sql
-func (q *Queries) GetUsers(ctx context.Context, username string) (GetUsersRow, error) {
-	row := q.db.QueryRow(ctx, getUsers, username)
-	var i GetUsersRow
-	err := row.Scan(&i.Username, &i.ID, &i.Password)
+func (q *Queries) GetUser(ctx context.Context, username string) (GetUserRow, error) {
+	row := q.db.QueryRow(ctx, getUser, username)
+	var i GetUserRow
+	err := row.Scan(&i.ID, &i.Password)
+	return i, err
+}
+
+const getUserByID = `-- name: GetUserByID :one
+SELECT
+  username,
+  fullname,
+  password
+FROM
+  users
+WHERE
+  id = $1
+`
+
+type GetUserByIDRow struct {
+	Username string `db:"username" json:"username"`
+	Fullname string `db:"fullname" json:"fullname"`
+	Password string `db:"password" json:"password"`
+}
+
+func (q *Queries) GetUserByID(ctx context.Context, id string) (GetUserByIDRow, error) {
+	row := q.db.QueryRow(ctx, getUserByID, id)
+	var i GetUserByIDRow
+	err := row.Scan(&i.Username, &i.Fullname, &i.Password)
 	return i, err
 }
 
 const listUers = `-- name: ListUers :many
 SELECT
-  id, full_name, username, password
+  id, fullname, username, password
 FROM
   users
 ORDER BY
-  full_name
+  fullname
 `
 
 func (q *Queries) ListUers(ctx context.Context) ([]User, error) {
@@ -90,7 +112,7 @@ func (q *Queries) ListUers(ctx context.Context) ([]User, error) {
 		var i User
 		if err := rows.Scan(
 			&i.ID,
-			&i.FullName,
+			&i.Fullname,
 			&i.Username,
 			&i.Password,
 		); err != nil {
