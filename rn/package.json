@@ -10,12 +10,16 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
+    "@react-native-community/cli-platform-android": "^13.2.0",
+    "@react-native-community/cli-platform-ios": "^13.2.0",
     "immer": "10.0.3",
     "jotai": "2.6.1",
     "jotai-immer": "0.3.0",
+    "jsc-android": "^250231.0.0",
     "nativewind": "2.0.11",
     "react": "18.1.0",
-    "react-native": "0.70.10"
+    "react-native": "0.70.10",
+    "react-native-gradle-plugin": "^0.71.19"
   },
   "devDependencies": {
     "@babel/core": "7.12.9",
