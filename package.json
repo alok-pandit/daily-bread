@@ -1,6 +1,3 @@
 {
-	"dependencies": {
-		"@rnx-kit/metro-config": "^1.3.14",
-		"@rnx-kit/metro-resolver-symlinks": "^0.1.34"
-	}
+	"packageManager": "pnpm@8.12.1"
 }
