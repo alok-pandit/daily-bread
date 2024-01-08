@@ -8,7 +8,7 @@
 ## Feature List:
     1. Login
     2. Register
-    3. Forgot Password
+    3. oAuth & MFA
     4. Reset Password
     5. Landing page with paginated product lists
     6. Product Search

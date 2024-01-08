@@ -20,7 +20,7 @@ import (
 func Initialize() {
 
 	app := fiber.New(fiber.Config{
-		Prefork:      true,
+		// Prefork:      true,
 		ServerHeader: "Fiber",
 		AppName:      "daily-bread",
 		JSONEncoder:  json.Marshal,
