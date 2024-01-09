@@ -19,7 +19,7 @@ FROM
 WHERE
   id = $1;
 
--- name: ListUers :many
+-- name: ListUsers :many
 SELECT
   *
 FROM

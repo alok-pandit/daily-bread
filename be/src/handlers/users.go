@@ -122,7 +122,7 @@ func Login(c *fiber.Ctx) error {
 }
 
 func GetAllUsers(c *fiber.Ctx) error {
-	users, err := db.Sqlc.ListUers(c.Context())
+	users, err := db.Sqlc.ListUsers(c.Context())
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{

@@ -11,10 +11,13 @@ import (
 type Querier interface {
 	CreateUser(ctx context.Context, arg CreateUserParams) error
 	DeleteUser(ctx context.Context, id string) error
+	// products.sql
+	GetProductByID(ctx context.Context, id string) (Product, error)
 	// users.sql
 	GetUser(ctx context.Context, username string) (GetUserRow, error)
 	GetUserByID(ctx context.Context, id string) (GetUserByIDRow, error)
-	ListUers(ctx context.Context) ([]User, error)
+	ListProducts(ctx context.Context, arg ListProductsParams) ([]ListProductsRow, error)
+	ListUsers(ctx context.Context) ([]User, error)
 }
 
 var _ Querier = (*Queries)(nil)

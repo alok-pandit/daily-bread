@@ -4,7 +4,18 @@
 
 package gen
 
-import ()
+import (
+	"github.com/jackc/pgx/v5/pgtype"
+)
+
+type Product struct {
+	ID          string         `db:"id" json:"id"`
+	Name        string         `db:"name" json:"name"`
+	Description pgtype.Text    `db:"description" json:"description"`
+	Price       pgtype.Numeric `db:"price" json:"price"`
+	Images      []string       `db:"images" json:"images"`
+	Quantity    pgtype.Int4    `db:"quantity" json:"quantity"`
+}
 
 type User struct {
 	ID       string `db:"id" json:"id"`

@@ -92,7 +92,7 @@ func (q *Queries) GetUserByID(ctx context.Context, id string) (GetUserByIDRow, e
 	return i, err
 }
 
-const listUers = `-- name: ListUers :many
+const listUsers = `-- name: ListUsers :many
 SELECT
   id, fullname, username, password
 FROM
@@ -101,8 +101,8 @@ ORDER BY
   fullname
 `
 
-func (q *Queries) ListUers(ctx context.Context) ([]User, error) {
-	rows, err := q.db.Query(ctx, listUers)
+func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
+	rows, err := q.db.Query(ctx, listUsers)
 	if err != nil {
 		return nil, err
 	}
