@@ -8,13 +8,13 @@ import (
 	"github.com/alok-pandit/daily-bread/src/db"
 	"github.com/alok-pandit/daily-bread/src/db/gen"
 	"github.com/alok-pandit/daily-bread/src/routes"
-	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/encryptcookie"
 	"github.com/gofiber/fiber/v2/middleware/helmet"
 	"github.com/gofiber/fiber/v2/middleware/idempotency"
 	"github.com/gofiber/fiber/v2/middleware/recover"
+	"github.com/segmentio/encoding/json"
 )
 
 func Initialize() {
