@@ -11,11 +11,129 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+const getFirstNProducts = `-- name: GetFirstNProducts :many
+WITH
+  SelectedProducts AS (
+    SELECT
+      id, name, description, price, images, quantity
+    FROM
+      products
+    ORDER BY
+      id ASC
+    LIMIT
+      $1
+  )
+SELECT
+  id, name, description, price, images, quantity,
+  LAST_VALUE(id) OVER () AS last_cursor
+FROM
+  SelectedProducts
+ORDER BY
+  id ASC
+`
+
+type GetFirstNProductsRow struct {
+	ID          string         `db:"id" json:"id"`
+	Name        string         `db:"name" json:"name"`
+	Description pgtype.Text    `db:"description" json:"description"`
+	Price       pgtype.Numeric `db:"price" json:"price"`
+	Images      []string       `db:"images" json:"images"`
+	Quantity    pgtype.Int4    `db:"quantity" json:"quantity"`
+	LastCursor  interface{}    `db:"last_cursor" json:"lastCursor"`
+}
+
+func (q *Queries) GetFirstNProducts(ctx context.Context, limit int32) ([]GetFirstNProductsRow, error) {
+	rows, err := q.db.Query(ctx, getFirstNProducts, limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []GetFirstNProductsRow{}
+	for rows.Next() {
+		var i GetFirstNProductsRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Description,
+			&i.Price,
+			&i.Images,
+			&i.Quantity,
+			&i.LastCursor,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getLastNProducts = `-- name: GetLastNProducts :many
+WITH
+  SelectedProducts AS (
+    SELECT
+      id, name, description, price, images, quantity
+    FROM
+      products
+    ORDER BY
+      id DESC
+    LIMIT
+      $1
+  )
+SELECT
+  id, name, description, price, images, quantity,
+  LAST_VALUE(id) OVER () AS last_cursor
+FROM
+  SelectedProducts
+ORDER BY
+  id ASC
+`
+
+type GetLastNProductsRow struct {
+	ID          string         `db:"id" json:"id"`
+	Name        string         `db:"name" json:"name"`
+	Description pgtype.Text    `db:"description" json:"description"`
+	Price       pgtype.Numeric `db:"price" json:"price"`
+	Images      []string       `db:"images" json:"images"`
+	Quantity    pgtype.Int4    `db:"quantity" json:"quantity"`
+	LastCursor  interface{}    `db:"last_cursor" json:"lastCursor"`
+}
+
+func (q *Queries) GetLastNProducts(ctx context.Context, limit int32) ([]GetLastNProductsRow, error) {
+	rows, err := q.db.Query(ctx, getLastNProducts, limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []GetLastNProductsRow{}
+	for rows.Next() {
+		var i GetLastNProductsRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Description,
+			&i.Price,
+			&i.Images,
+			&i.Quantity,
+			&i.LastCursor,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getProductByID = `-- name: GetProductByID :one
 SELECT
   id, name, description, price, images, quantity
 FROM
-  product
+  products
 WHERE
   id = $1
 `
@@ -35,33 +153,33 @@ func (q *Queries) GetProductByID(ctx context.Context, id string) (Product, error
 	return i, err
 }
 
-const listProducts = `-- name: ListProducts :many
+const listNProductsAfter = `-- name: ListNProductsAfter :many
 WITH
   SelectedProducts AS (
     SELECT
       id, name, description, price, images, quantity
     FROM
-      product
+      products
     WHERE
-      id < $1
+      id > $1
     ORDER BY
-      id DESC
+      id ASC
     LIMIT
       $2
   )
 SELECT
   id, name, description, price, images, quantity,
-  LAST(id) OVER () AS last_cursor
+  LAST_VALUE(id) OVER () AS last_cursor
 FROM
   SelectedProducts
 `
 
-type ListProductsParams struct {
+type ListNProductsAfterParams struct {
 	ID    string `db:"id" json:"id"`
 	Limit int32  `db:"limit" json:"limit"`
 }
 
-type ListProductsRow struct {
+type ListNProductsAfterRow struct {
 	ID          string         `db:"id" json:"id"`
 	Name        string         `db:"name" json:"name"`
 	Description pgtype.Text    `db:"description" json:"description"`
@@ -71,15 +189,79 @@ type ListProductsRow struct {
 	LastCursor  interface{}    `db:"last_cursor" json:"lastCursor"`
 }
 
-func (q *Queries) ListProducts(ctx context.Context, arg ListProductsParams) ([]ListProductsRow, error) {
-	rows, err := q.db.Query(ctx, listProducts, arg.ID, arg.Limit)
+func (q *Queries) ListNProductsAfter(ctx context.Context, arg ListNProductsAfterParams) ([]ListNProductsAfterRow, error) {
+	rows, err := q.db.Query(ctx, listNProductsAfter, arg.ID, arg.Limit)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []ListProductsRow{}
+	items := []ListNProductsAfterRow{}
 	for rows.Next() {
-		var i ListProductsRow
+		var i ListNProductsAfterRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Description,
+			&i.Price,
+			&i.Images,
+			&i.Quantity,
+			&i.LastCursor,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listNProductsBefore = `-- name: ListNProductsBefore :many
+WITH
+  SelectedProducts AS (
+    SELECT
+      id, name, description, price, images, quantity
+    FROM
+      products
+    WHERE
+      id < $1
+    ORDER BY
+      id DESC
+    LIMIT
+      $2
+  )
+SELECT
+  id, name, description, price, images, quantity,
+  LAST_VALUE(id) OVER () AS last_cursor
+FROM
+  SelectedProducts
+`
+
+type ListNProductsBeforeParams struct {
+	ID    string `db:"id" json:"id"`
+	Limit int32  `db:"limit" json:"limit"`
+}
+
+type ListNProductsBeforeRow struct {
+	ID          string         `db:"id" json:"id"`
+	Name        string         `db:"name" json:"name"`
+	Description pgtype.Text    `db:"description" json:"description"`
+	Price       pgtype.Numeric `db:"price" json:"price"`
+	Images      []string       `db:"images" json:"images"`
+	Quantity    pgtype.Int4    `db:"quantity" json:"quantity"`
+	LastCursor  interface{}    `db:"last_cursor" json:"lastCursor"`
+}
+
+func (q *Queries) ListNProductsBefore(ctx context.Context, arg ListNProductsBeforeParams) ([]ListNProductsBeforeRow, error) {
+	rows, err := q.db.Query(ctx, listNProductsBefore, arg.ID, arg.Limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []ListNProductsBeforeRow{}
+	for rows.Next() {
+		var i ListNProductsBeforeRow
 		if err := rows.Scan(
 			&i.ID,
 			&i.Name,

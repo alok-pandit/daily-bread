@@ -1,5 +1,5 @@
 CREATE TABLE
-  IF NOT EXISTS product (
+  IF NOT EXISTS products (
     id VARCHAR PRIMARY KEY NOT NULL UNIQUE,
     name VARCHAR NOT NULL,
     description VARCHAR DEFAULT '',
@@ -9,6 +9,6 @@ CREATE TABLE
   );
 
 
-CREATE INDEX id_idx ON product ((lower(id))) INCLUDE (name, description)
+CREATE INDEX id_idx ON products ((lower(id))) INCLUDE (name, description)
 WITH
   (deduplicate_items = off);

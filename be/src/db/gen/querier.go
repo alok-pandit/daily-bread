@@ -11,12 +11,15 @@ import (
 type Querier interface {
 	CreateUser(ctx context.Context, arg CreateUserParams) error
 	DeleteUser(ctx context.Context, id string) error
+	GetFirstNProducts(ctx context.Context, limit int32) ([]GetFirstNProductsRow, error)
+	GetLastNProducts(ctx context.Context, limit int32) ([]GetLastNProductsRow, error)
 	// products.sql
 	GetProductByID(ctx context.Context, id string) (Product, error)
 	// users.sql
 	GetUser(ctx context.Context, username string) (GetUserRow, error)
 	GetUserByID(ctx context.Context, id string) (GetUserByIDRow, error)
-	ListProducts(ctx context.Context, arg ListProductsParams) ([]ListProductsRow, error)
+	ListNProductsAfter(ctx context.Context, arg ListNProductsAfterParams) ([]ListNProductsAfterRow, error)
+	ListNProductsBefore(ctx context.Context, arg ListNProductsBeforeParams) ([]ListNProductsBeforeRow, error)
 	ListUsers(ctx context.Context) ([]User, error)
 }
 

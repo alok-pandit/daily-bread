@@ -1,2 +1,5 @@
 DROP TABLE
-  IF EXISTS product CASCADE;
+  IF EXISTS products CASCADE;
+
+
+DROP INDEX id_idx;

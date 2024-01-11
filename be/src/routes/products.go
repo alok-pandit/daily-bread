@@ -7,7 +7,8 @@ import (
 
 func ProductRouter(router fiber.Router) {
 
-	router.Get("/", handlers.ListAllProducts)
+	// router.Get("/list/:id-:limit<min(1);max(100)>", handlers.ListAllProducts)
+	router.Post("/list", handlers.ListAllProducts)
 	router.Get("/:id", handlers.GetProductByID)
 
 }

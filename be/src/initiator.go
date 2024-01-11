@@ -27,6 +27,12 @@ func Initialize() {
 		JSONDecoder:  json.Unmarshal,
 	})
 
+	// app.Use(requestid.New())
+
+	// app.Use(logger.New(logger.Config{
+	// 	Format: "[${ip}]:${port} ${locals:requestid} ${status} - ${method} ${path}\n",
+	// }))
+
 	app.Use(recover.New())
 
 	app.Use(idempotency.New())
@@ -48,6 +54,8 @@ func Initialize() {
 	api := app.Group("/api")
 
 	api.Group("/user").Route("/", routes.UserRouter)
+
+	api.Group("/products").Route("/", routes.ProductRouter)
 
 	log.Fatal(app.Listen(":" + os.Getenv("PORT")))
 
