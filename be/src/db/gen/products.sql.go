@@ -25,7 +25,8 @@ WITH
   )
 SELECT
   id, name, description, price, images, quantity,
-  LAST_VALUE(id) OVER () AS last_cursor
+  LAST_VALUE(id) OVER () AS last_cursor,
+  FIRST_VALUE(id) OVER () AS first_cursor
 FROM
   SelectedProducts
 ORDER BY
@@ -40,6 +41,7 @@ type GetFirstNProductsRow struct {
 	Images      []string       `db:"images" json:"images"`
 	Quantity    pgtype.Int4    `db:"quantity" json:"quantity"`
 	LastCursor  interface{}    `db:"last_cursor" json:"lastCursor"`
+	FirstCursor interface{}    `db:"first_cursor" json:"firstCursor"`
 }
 
 func (q *Queries) GetFirstNProducts(ctx context.Context, limit int32) ([]GetFirstNProductsRow, error) {
@@ -59,6 +61,7 @@ func (q *Queries) GetFirstNProducts(ctx context.Context, limit int32) ([]GetFirs
 			&i.Images,
 			&i.Quantity,
 			&i.LastCursor,
+			&i.FirstCursor,
 		); err != nil {
 			return nil, err
 		}
@@ -84,7 +87,8 @@ WITH
   )
 SELECT
   id, name, description, price, images, quantity,
-  LAST_VALUE(id) OVER () AS last_cursor
+  LAST_VALUE(id) OVER () AS last_cursor,
+  FIRST_VALUE(id) OVER () AS first_cursor
 FROM
   SelectedProducts
 ORDER BY
@@ -99,6 +103,7 @@ type GetLastNProductsRow struct {
 	Images      []string       `db:"images" json:"images"`
 	Quantity    pgtype.Int4    `db:"quantity" json:"quantity"`
 	LastCursor  interface{}    `db:"last_cursor" json:"lastCursor"`
+	FirstCursor interface{}    `db:"first_cursor" json:"firstCursor"`
 }
 
 func (q *Queries) GetLastNProducts(ctx context.Context, limit int32) ([]GetLastNProductsRow, error) {
@@ -118,6 +123,7 @@ func (q *Queries) GetLastNProducts(ctx context.Context, limit int32) ([]GetLastN
 			&i.Images,
 			&i.Quantity,
 			&i.LastCursor,
+			&i.FirstCursor,
 		); err != nil {
 			return nil, err
 		}
@@ -169,9 +175,12 @@ WITH
   )
 SELECT
   id, name, description, price, images, quantity,
-  LAST_VALUE(id) OVER () AS last_cursor
+  LAST_VALUE(id) OVER () AS last_cursor,
+  FIRST_VALUE(id) OVER () AS first_cursor
 FROM
   SelectedProducts
+ORDER BY
+  id ASC
 `
 
 type ListNProductsAfterParams struct {
@@ -187,6 +196,7 @@ type ListNProductsAfterRow struct {
 	Images      []string       `db:"images" json:"images"`
 	Quantity    pgtype.Int4    `db:"quantity" json:"quantity"`
 	LastCursor  interface{}    `db:"last_cursor" json:"lastCursor"`
+	FirstCursor interface{}    `db:"first_cursor" json:"firstCursor"`
 }
 
 func (q *Queries) ListNProductsAfter(ctx context.Context, arg ListNProductsAfterParams) ([]ListNProductsAfterRow, error) {
@@ -206,6 +216,7 @@ func (q *Queries) ListNProductsAfter(ctx context.Context, arg ListNProductsAfter
 			&i.Images,
 			&i.Quantity,
 			&i.LastCursor,
+			&i.FirstCursor,
 		); err != nil {
 			return nil, err
 		}
@@ -233,9 +244,12 @@ WITH
   )
 SELECT
   id, name, description, price, images, quantity,
-  LAST_VALUE(id) OVER () AS last_cursor
+  LAST_VALUE(id) OVER () AS last_cursor,
+  FIRST_VALUE(id) OVER () AS first_cursor
 FROM
   SelectedProducts
+ORDER BY
+  id ASC
 `
 
 type ListNProductsBeforeParams struct {
@@ -251,6 +265,7 @@ type ListNProductsBeforeRow struct {
 	Images      []string       `db:"images" json:"images"`
 	Quantity    pgtype.Int4    `db:"quantity" json:"quantity"`
 	LastCursor  interface{}    `db:"last_cursor" json:"lastCursor"`
+	FirstCursor interface{}    `db:"first_cursor" json:"firstCursor"`
 }
 
 func (q *Queries) ListNProductsBefore(ctx context.Context, arg ListNProductsBeforeParams) ([]ListNProductsBeforeRow, error) {
@@ -270,6 +285,7 @@ func (q *Queries) ListNProductsBefore(ctx context.Context, arg ListNProductsBefo
 			&i.Images,
 			&i.Quantity,
 			&i.LastCursor,
+			&i.FirstCursor,
 		); err != nil {
 			return nil, err
 		}

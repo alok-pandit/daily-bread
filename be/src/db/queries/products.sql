@@ -22,7 +22,8 @@ WITH
   )
 SELECT
   *,
-  LAST_VALUE(id) OVER () AS last_cursor
+  LAST_VALUE(id) OVER () AS last_cursor,
+  FIRST_VALUE(id) OVER () AS first_cursor
 FROM
   SelectedProducts
 ORDER BY
@@ -43,7 +44,8 @@ WITH
   )
 SELECT
   *,
-  LAST_VALUE(id) OVER () AS last_cursor
+  LAST_VALUE(id) OVER () AS last_cursor,
+  FIRST_VALUE(id) OVER () AS first_cursor
 FROM
   SelectedProducts
 ORDER BY
@@ -66,9 +68,12 @@ WITH
   )
 SELECT
   *,
-  LAST_VALUE(id) OVER () AS last_cursor
+  LAST_VALUE(id) OVER () AS last_cursor,
+  FIRST_VALUE(id) OVER () AS first_cursor
 FROM
-  SelectedProducts;
+  SelectedProducts
+ORDER BY
+  id ASC;
 
 
 -- name: ListNProductsBefore :many
@@ -87,6 +92,9 @@ WITH
   )
 SELECT
   *,
-  LAST_VALUE(id) OVER () AS last_cursor
+  LAST_VALUE(id) OVER () AS last_cursor,
+  FIRST_VALUE(id) OVER () AS first_cursor
 FROM
-  SelectedProducts;
+  SelectedProducts
+ORDER BY
+  id ASC;
