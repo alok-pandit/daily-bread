@@ -13,7 +13,9 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/encryptcookie"
 	"github.com/gofiber/fiber/v2/middleware/helmet"
 	"github.com/gofiber/fiber/v2/middleware/idempotency"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
+	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/segmentio/encoding/json"
 )
 
@@ -27,11 +29,15 @@ func Initialize() {
 		JSONDecoder:  json.Unmarshal,
 	})
 
-	// app.Use(requestid.New())
+	if os.Getenv("ENV") != "prod" {
 
-	// app.Use(logger.New(logger.Config{
-	// 	Format: "[${ip}]:${port} ${locals:requestid} ${status} - ${method} ${path}\n",
-	// }))
+		app.Use(requestid.New())
+
+		app.Use(logger.New(logger.Config{
+			Format: "[${ip}]:${port} ${locals:requestid} ${status} - ${method} ${path}\n",
+		}))
+
+	}
 
 	app.Use(recover.New())
 
@@ -42,7 +48,7 @@ func Initialize() {
 	app.Use(helmet.New())
 
 	app.Use(encryptcookie.New(encryptcookie.Config{
-		Key: os.Getenv("JWT_SECRET"),
+		Key: os.Getenv("COOKIE_ENC_KEY"),
 	}))
 
 	conn := db.Connect()
