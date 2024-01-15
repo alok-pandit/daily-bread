@@ -1,0 +1,2 @@
+productList:
+    bombardier -c 1000 -d 1m -r 300 -H 'Content-Type: application/json' --method="POST" -f product-list.json -l http://localhost:5000/api/products/list

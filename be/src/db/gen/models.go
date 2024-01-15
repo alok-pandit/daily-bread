@@ -8,6 +8,11 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+type Counter struct {
+	ID    int32 `db:"id" json:"id"`
+	Count int32 `db:"count" json:"count"`
+}
+
 type Product struct {
 	ID          string         `db:"id" json:"id"`
 	Name        string         `db:"name" json:"name"`

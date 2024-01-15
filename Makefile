@@ -24,14 +24,14 @@ migration-create:
 	migrate create -ext sql -dir be/src/db/migrations/ -seq $$name
 
 migration-up:
-	migrate -path be/src/db/migrations/ -database ${DB_URL} -verbose up
+	migrate -path be/src/db/migrations/ -database ${DB_MIGRATION_URL} -verbose up
 
 migration-down:
-	migrate -path be/src/db/migrations/ -database ${DB_URL} -verbose down
+	migrate -path be/src/db/migrations/ -database ${DB_MIGRATION_URL} -verbose down
 
 migration-fix:
 	@read -p "Enter Migration Version Number: " version; \
-	migrate -path be/src/db/migrations/ -database ${DB_URL} force $$version
+	migrate -path be/src/db/migrations/ -database ${DB_MIGRATION_URL} force $$version
 
 sqlc-compile:
 	cd be && sqlc compile && cd ..

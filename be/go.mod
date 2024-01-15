@@ -25,6 +25,7 @@ require (
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
+	github.com/mattn/go-sqlite3 v1.14.17 // indirect
 	github.com/philhofer/fwd v1.1.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
@@ -43,6 +44,7 @@ require (
 	github.com/andybalholm/brotli v1.0.6 // indirect
 	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/gofiber/contrib/paseto v1.1.0
+	github.com/gofiber/storage/sqlite3 v1.3.8
 	github.com/google/uuid v1.5.0 // indirect
 	github.com/jackc/pgx/v5 v5.5.1
 	github.com/klauspost/compress v1.17.4 // indirect
