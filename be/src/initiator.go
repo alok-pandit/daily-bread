@@ -30,10 +30,13 @@ func Initialize() {
 		JSONDecoder:  json.Unmarshal,
 	})
 
-	storage := sqlite3.New() // From github.com/gofiber/storage/sqlite3
+	storage := sqlite3.New(sqlite3.Config{
+		Database: os.Getenv("RATE_LIMITER_DB_NAME"),
+	})
+
 	app.Use(limiter.New(limiter.Config{
 		Storage: storage,
-		Max:     300,
+		Max:     25000,
 	}))
 
 	if os.Getenv("ENV") != "prod" {
@@ -41,7 +44,7 @@ func Initialize() {
 		app.Use(requestid.New())
 
 		app.Use(logger.New(logger.Config{
-			Format: "${latency} ${time} [${ip}]:${port} ${locals:requestid} ${status} - ${method} ${path} ${error}\n",
+			Format: "${latency} ${time} [${ip}]:${port} ${locals:requestid} ${status} - ${method} ${path} ${error} ${locals:response}\n",
 		}))
 
 	} else {

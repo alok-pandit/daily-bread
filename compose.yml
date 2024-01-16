@@ -34,6 +34,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+
   prometheus:
     image: "public.ecr.aws/readyset/readyset-prometheus:latest"
     network_mode: "host"
@@ -46,6 +47,7 @@ services:
       - 9090
     volumes:
       - "prometheus:/prometheus"
+
   pushgateway:
     image: prom/pushgateway
     expose:
@@ -59,6 +61,7 @@ services:
       UPSTREAM_DB_URL: postgresql://postgres:postgres@localhost:5432/db?sslmode=disable
       RS_PORT: 5433
       RS_GRAFANA_PORT: 4000
+
   postgres:
     image: postgres:16
     network_mode: "host"
@@ -82,7 +85,7 @@ services:
   db-scylla:
     image: scylladb/scylla
     network_mode: "host"
-    container_name: db-scylla
+    container_name: daily-bread-db-scylla
     volumes:
       - type: volume
         source: target
@@ -92,9 +95,9 @@ services:
 
   db-scylla2:
     image: scylladb/scylla
-    container_name: db-scylla2
+    container_name: daily-bread-db-scylla2
     network_mode: "host"
-    command: --seeds=db-scylla
+    command: --seeds=daily-bread-db-scylla
     volumes:
       - type: volume
         source: target
@@ -104,9 +107,9 @@ services:
 
   db-scylla3:
     image: scylladb/scylla
-    container_name: db-scylla3
+    container_name: daily-bread-db-scylla3
     network_mode: "host"
-    command: --seeds=db-scylla
+    command: --seeds=daily-bread-db-scylla
     volumes:
       - type: volume
         source: target

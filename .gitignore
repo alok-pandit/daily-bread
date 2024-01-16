@@ -1,2 +1,4 @@
 node_modules
 .turbo
+be/src/db/rate_limiter.sqlite3
+be/src/db/rate_limiter.sqlite3-journal

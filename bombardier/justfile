@@ -1,2 +1,8 @@
 productList:
     bombardier -c 1000 -d 1m -r 300 -H 'Content-Type: application/json' --method="POST" -f product-list.json -l http://localhost:5000/api/products/list
+
+getCounter:
+    bombardier -c 1000 -d 10s -r 300 -H 'Content-Type: application/json' --method="GET" -l http://localhost:5000/api/example
+
+updateCounter:
+    bombardier -c 1000 -d 10s -r 100 -H 'Content-Type: application/json' --method="POST" -l http://localhost:5000/api/example
