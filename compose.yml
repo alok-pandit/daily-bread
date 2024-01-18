@@ -117,8 +117,22 @@ services:
         volume:
           nocopy: true
 
+  keydb:
+    image: eqalpha/keydb
+    # command: keydb-server /etc/keydb/redis.conf --server-threads 2 --active-replica yes --replicaof 192.168.1.1 6379
+    # command: keydb-server /etc/keydb/redis.conf --server-threads 2 --active-replica yes --replicaof 192.168.1.2 6379
+    command: keydb-server /etc/keydb/redis.conf --server-threads 2
+    volumes:
+      - ./redis.conf:/etc/keydb/redis.conf
+      - data:/data
+    ports:
+      - 6379:6379
+    restart: unless-stopped
+
 volumes:
   postgres-data: ~
   target: ~
   prometheus: ~
   readyset: ~
+  data:
+    driver: local
