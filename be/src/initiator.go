@@ -87,6 +87,7 @@ func Initialize() {
 
 		app.Use(fiberzerolog.New(fiberzerolog.Config{
 			Logger: &logger,
+			Fields: []string{"ip", "port", "latency", "time", "status", "${locals:requestid}", "method", "url", "error"},
 		}))
 
 	} else {
