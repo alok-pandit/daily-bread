@@ -10,6 +10,9 @@ importers:
 
   rn:
     dependencies:
+      '-':
+        specifier: ^0.0.1
+        version: 0.0.1
       '@react-native-community/cli-platform-android':
         specifier: ^13.2.0
         version: 13.2.0
@@ -148,6 +151,10 @@ importers:
         version: 4.8.3
 
 packages:
+
+  /-@0.0.1:
+    resolution: {integrity: sha512-3HfneK3DGAm05fpyj20sT3apkNcvPpCuccOThOPdzz8sY7GgQGe0l93XH9bt+YzibcTIgUAIMoyVJI740RtgyQ==}
+    dev: false
 
   /@aashutoshrathi/word-wrap@1.2.6:
     resolution: {integrity: sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==}
