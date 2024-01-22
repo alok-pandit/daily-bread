@@ -82,40 +82,40 @@ services:
       timeout: 5s
       retries: 12
 
-  db-scylla:
-    image: scylladb/scylla
-    network_mode: "host"
-    container_name: daily-bread-db-scylla
-    volumes:
-      - type: volume
-        source: target
-        target: /var/lib/scylla
-        volume:
-          nocopy: true
+  # db-scylla:
+  #   image: scylladb/scylla
+  #   network_mode: "host"
+  #   container_name: daily-bread-db-scylla
+  #   volumes:
+  #     - type: volume
+  #       source: target
+  #       target: /var/lib/scylla
+  #       volume:
+  #         nocopy: true
 
-  db-scylla2:
-    image: scylladb/scylla
-    container_name: daily-bread-db-scylla2
-    network_mode: "host"
-    command: --seeds=daily-bread-db-scylla
-    volumes:
-      - type: volume
-        source: target
-        target: /var/lib/scylla
-        volume:
-          nocopy: true
+  # db-scylla2:
+  #   image: scylladb/scylla
+  #   container_name: daily-bread-db-scylla2
+  #   network_mode: "host"
+  #   command: --seeds=daily-bread-db-scylla
+  #   volumes:
+  #     - type: volume
+  #       source: target
+  #       target: /var/lib/scylla
+  #       volume:
+  #         nocopy: true
 
-  db-scylla3:
-    image: scylladb/scylla
-    container_name: daily-bread-db-scylla3
-    network_mode: "host"
-    command: --seeds=daily-bread-db-scylla
-    volumes:
-      - type: volume
-        source: target
-        target: /var/lib/scylla
-        volume:
-          nocopy: true
+  # db-scylla3:
+  #   image: scylladb/scylla
+  #   container_name: daily-bread-db-scylla3
+  #   network_mode: "host"
+  #   command: --seeds=daily-bread-db-scylla
+  #   volumes:
+  #     - type: volume
+  #       source: target
+  #       target: /var/lib/scylla
+  #       volume:
+  #         nocopy: true
 
   keydb:
     image: eqalpha/keydb
