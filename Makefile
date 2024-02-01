@@ -1,3 +1,6 @@
+run-be:
+	cd be && go vet && golangci-lint run src && air && cd ..
+
 nodemon:
 	cd be && go vet && golangci-lint run src && nodemon --watch './**/*.go' --signal SIGTERM --exec 'go' run main.go && cd ..
 
