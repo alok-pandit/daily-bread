@@ -13,6 +13,7 @@
     "prettier-watch": "onchange 'src/**/*.{js,ts,jsx,tsx}' -- prettier --write {{changed}}"
   },
   "dependencies": {
+    "-": "^0.0.1",
     "@react-native-community/cli-platform-android": "^13.2.0",
     "@react-native-community/cli-platform-ios": "^13.2.0",
     "@react-navigation/native": "^6.1.9",

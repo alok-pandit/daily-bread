@@ -5,6 +5,7 @@ go 1.21.5
 require (
 	github.com/gofiber/fiber/v2 v2.52.0
 	github.com/o1egl/paseto v1.0.0
+	github.com/rs/zerolog v1.31.0
 	github.com/swaggo/swag v1.16.2
 )
 
@@ -13,8 +14,7 @@ require (
 	github.com/aead/chacha20 v0.0.0-20180709150244-8b13a72661da // indirect
 	github.com/aead/chacha20poly1305 v0.0.0-20170617001512-233f39982aeb // indirect
 	github.com/aead/poly1305 v0.0.0-20180717145839-3fee0db0b635 // indirect
-	github.com/cespare/xxhash/v2 v2.2.0 // indirect
-	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
+	github.com/fasthttp/websocket v1.5.7 // indirect
 	github.com/go-openapi/jsonpointer v0.20.2 // indirect
 	github.com/go-openapi/jsonreference v0.20.4 // indirect
 	github.com/go-openapi/spec v0.20.14 // indirect
@@ -28,16 +28,15 @@ require (
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
-	github.com/mattn/go-sqlite3 v1.14.17 // indirect
 	github.com/philhofer/fwd v1.1.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/redis/go-redis/v9 v9.3.0 // indirect
 	github.com/redis/rueidis v1.0.23 // indirect
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
-	github.com/rs/zerolog v1.31.0 // indirect
+	github.com/savsgio/gotils v0.0.0-20230208104028-c358bd845dee // indirect
 	github.com/segmentio/asm v1.1.3 // indirect
 	github.com/tinylib/msgp v1.1.8 // indirect
 	golang.org/x/crypto v0.18.0 // indirect
+	golang.org/x/net v0.19.0 // indirect
 	golang.org/x/sync v0.5.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/tools v0.16.1 // indirect
@@ -51,9 +50,8 @@ require (
 	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/gofiber/contrib/fiberzerolog v0.2.3
 	github.com/gofiber/contrib/paseto v1.1.0
-	github.com/gofiber/storage/redis/v3 v3.1.0
+	github.com/gofiber/contrib/websocket v1.3.0
 	github.com/gofiber/storage/rueidis v1.2.1
-	github.com/gofiber/storage/sqlite3 v1.3.8
 	github.com/google/uuid v1.5.0 // indirect
 	github.com/jackc/pgx/v5 v5.5.1
 	github.com/klauspost/compress v1.17.4 // indirect

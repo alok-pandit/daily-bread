@@ -131,7 +131,7 @@ services:
 
 volumes:
   postgres-data: ~
-  target: ~
+  # target: ~
   prometheus: ~
   readyset: ~
   data:
