@@ -44,3 +44,12 @@ sqlc-gen:
 
 swag-doc:
 	cd be && swag init -g main.go --output src/docs && cd ..
+
+rn-start:
+	cd rn && pnpm start && cd ..
+
+rn-android:
+	cd rn && pnpm android && cd ..
+
+start:
+	docker compose up -d && ttab 'make run-be' #&& ttab 'make rn-start' && ttab 'make rn-android'
