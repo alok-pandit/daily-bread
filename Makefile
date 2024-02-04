@@ -52,4 +52,4 @@ rn-android:
 	cd rn && pnpm android && cd ..
 
 start:
-	docker compose up -d && ttab 'make run-be' #&& ttab 'make rn-start' && ttab 'make rn-android'
+	docker compose up -d && ttab 'make run-be' && ttab 'make rn-start' && ttab 'make rn-android'
