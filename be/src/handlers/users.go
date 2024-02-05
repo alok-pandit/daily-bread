@@ -103,7 +103,7 @@ func Login(c *fiber.Ctx) error {
 
 	encryptedToken, err := paseto.NewV2().Encrypt([]byte(os.Getenv("JWT_SECRET")), utils.JWTPayloadStruct{
 		ID:        row.ID,
-		ExpiresAt: time.Now().Add(time.Minute * 15),
+		ExpiresAt: time.Now().Add(time.Minute * 1),
 	}, nil)
 
 	if err != nil {
@@ -114,7 +114,7 @@ func Login(c *fiber.Ctx) error {
 		Name:     "token",
 		Value:    encryptedToken,
 		HTTPOnly: true,
-		Expires:  time.Now().Add(time.Minute * 15),
+		Expires:  time.Now().Add(time.Minute * 1),
 	})
 
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{})

@@ -1,3 +1,5 @@
+include .envrc
+
 run-be:
 	cd be && go vet && golangci-lint run src && tygo generate && cp ./../rn/src/codegen/index.ts ./../fe/src/codegen/ && air && rm -rf ./../types && cd ..
 	
@@ -51,5 +53,8 @@ rn-start:
 rn-android:
 	cd rn && pnpm android && cd ..
 
+tnl:
+	ngrok http --domain=${NGROK_STATIC_URL} ${PORT}
+
 start:
-	docker compose up -d && ttab 'make run-be' && ttab 'make rn-start' && ttab 'make rn-android'
+	docker compose up -d && ttab 'make run-be' && ttab 'make rn-start' && ttab 'make rn-android' && ttab 'make tnl'

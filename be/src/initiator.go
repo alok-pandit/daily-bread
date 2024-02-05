@@ -18,7 +18,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/etag"
 	"github.com/gofiber/fiber/v2/middleware/healthcheck"
 	"github.com/gofiber/fiber/v2/middleware/helmet"
-	"github.com/gofiber/fiber/v2/middleware/idempotency"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
@@ -80,26 +79,28 @@ func Initialize() {
 		Weak: true,
 	}))
 
-	if os.Getenv("ENV") != "prod" {
+	// if os.Getenv("ENV") != "prod" {
 
-		app.Use(requestid.New())
+	app.Use(requestid.New())
 
-		logger := zerolog.New(os.Stderr).With().Timestamp().Logger()
+	logger := zerolog.New(os.Stderr).With().Timestamp().Logger()
 
-		app.Use(fiberzerolog.New(fiberzerolog.Config{
-			Logger: &logger,
-			Fields: []string{"ip", "port", "latency", "time", "status", "${locals:requestid}", "method", "url", "error"},
-		}))
+	app.Use(fiberzerolog.New(fiberzerolog.Config{
+		Logger: &logger,
+		Fields: []string{"ip", "port", "latency", "time", "status", "${locals:requestid}", "method", "url", "error"},
+	}))
 
-	} else {
+	// } else {
 
-		app.Use(idempotency.New())
+	// 	app.Use(idempotency.New())
 
-	}
+	// }
 
 	app.Use(recover.New())
 
-	app.Use(cors.New())
+	app.Use(cors.New(cors.Config{
+		AllowCredentials: true,
+	}))
 
 	app.Use(helmet.New())
 
