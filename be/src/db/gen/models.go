@@ -23,8 +23,9 @@ type Product struct {
 }
 
 type User struct {
-	ID       string `db:"id" json:"id"`
-	Fullname string `db:"fullname" json:"fullname"`
-	Username string `db:"username" json:"username"`
-	Password string `db:"password" json:"password"`
+	ID           string      `db:"id" json:"id"`
+	Fullname     string      `db:"fullname" json:"fullname"`
+	Username     string      `db:"username" json:"username"`
+	Password     string      `db:"password" json:"password"`
+	RefreshToken pgtype.Text `db:"refresh_token" json:"refreshToken"`
 }

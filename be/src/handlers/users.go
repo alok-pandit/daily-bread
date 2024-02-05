@@ -9,6 +9,7 @@ import (
 	"github.com/alok-pandit/daily-bread/src/models"
 	"github.com/alok-pandit/daily-bread/src/utils"
 	"github.com/gofiber/fiber/v2"
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/o1egl/paseto"
 )
 
@@ -63,6 +64,68 @@ func CreateUser(c *fiber.Ctx) error {
 
 }
 
+func RefreshToken(c *fiber.Ctx) error {
+
+	token := c.Cookies("refresh_token")
+
+	if len(token) == 0 {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": "Refresh token not found",
+		})
+	}
+
+	var payload utils.JWTPayloadStruct
+
+	err := paseto.NewV2().Decrypt(token, []byte(os.Getenv("JWT_SECRET")), &payload, nil)
+
+	if time.Now().Compare(payload.ExpiresAt) > 0 {
+
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Refresh token expired",
+		})
+	}
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid refresh token",
+		})
+	}
+
+	t, err := db.Sqlc.GetRefreshToken(c.Context(), payload.ID)
+
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid refresh token",
+		})
+	}
+
+	if t.String != token {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid refresh token",
+		})
+	}
+
+	encryptedToken, err := paseto.NewV2().Encrypt([]byte(os.Getenv("JWT_SECRET")), utils.JWTPayloadStruct{
+		ID:        payload.ID,
+		ExpiresAt: time.Now().Add(time.Minute * 15),
+	}, nil)
+
+	if err != nil {
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	c.Cookie(&fiber.Cookie{
+		Name:     "token",
+		Value:    encryptedToken,
+		HTTPOnly: true,
+		Secure:   true,
+		Expires:  time.Now().Add(time.Minute * 15),
+	})
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"Success": payload})
+
+}
+
 func Login(c *fiber.Ctx) error {
 
 	var user models.CreateUserInput
@@ -103,21 +166,48 @@ func Login(c *fiber.Ctx) error {
 
 	encryptedToken, err := paseto.NewV2().Encrypt([]byte(os.Getenv("JWT_SECRET")), utils.JWTPayloadStruct{
 		ID:        row.ID,
-		ExpiresAt: time.Now().Add(time.Minute * 1),
+		ExpiresAt: time.Now().Add(time.Minute * 15),
 	}, nil)
 
 	if err != nil {
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
+	refreshToken, err := paseto.NewV2().Encrypt([]byte(os.Getenv("JWT_SECRET")), utils.JWTPayloadStruct{
+		ID:        row.ID,
+		ExpiresAt: time.Now().Add(time.Minute * 60 * 24 * 365),
+	}, nil)
+
+	if err != nil {
+		return c.SendStatus(fiber.StatusInternalServerError)
+	}
+
+	if err := db.Sqlc.SaveRefreshToken(c.Context(), gen.SaveRefreshTokenParams{
+		ID:           row.ID,
+		RefreshToken: pgtype.Text{String: refreshToken, Valid: true},
+	}); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid request body",
+		})
+	}
+
 	c.Cookie(&fiber.Cookie{
 		Name:     "token",
 		Value:    encryptedToken,
 		HTTPOnly: true,
-		Expires:  time.Now().Add(time.Minute * 1),
+		Secure:   true,
+		Expires:  time.Now().Add(time.Minute * 15),
 	})
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{})
+	c.Cookie(&fiber.Cookie{
+		Name:     "refresh_token",
+		Value:    refreshToken,
+		HTTPOnly: true,
+		Secure:   true,
+		Expires:  time.Now().Add(time.Minute * 60 * 24 * 365),
+	})
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"Success": true})
 
 }
 

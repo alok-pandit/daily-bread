@@ -7,6 +7,8 @@ package gen
 
 import (
 	"context"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createUser = `-- name: CreateUser :exec
@@ -43,6 +45,22 @@ WHERE
 func (q *Queries) DeleteUser(ctx context.Context, id string) error {
 	_, err := q.db.Exec(ctx, deleteUser, id)
 	return err
+}
+
+const getRefreshToken = `-- name: GetRefreshToken :one
+SELECT
+  refresh_token
+FROM
+  users
+WHERE
+  id = $1
+`
+
+func (q *Queries) GetRefreshToken(ctx context.Context, id string) (pgtype.Text, error) {
+	row := q.db.QueryRow(ctx, getRefreshToken, id)
+	var refresh_token pgtype.Text
+	err := row.Scan(&refresh_token)
+	return refresh_token, err
 }
 
 const getUser = `-- name: GetUser :one
@@ -94,7 +112,7 @@ func (q *Queries) GetUserByID(ctx context.Context, id string) (GetUserByIDRow, e
 
 const listUsers = `-- name: ListUsers :many
 SELECT
-  id, fullname, username, password
+  id, fullname, username, password, refresh_token
 FROM
   users
 ORDER BY
@@ -115,6 +133,7 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 			&i.Fullname,
 			&i.Username,
 			&i.Password,
+			&i.RefreshToken,
 		); err != nil {
 			return nil, err
 		}
@@ -124,4 +143,23 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 		return nil, err
 	}
 	return items, nil
+}
+
+const saveRefreshToken = `-- name: SaveRefreshToken :exec
+UPDATE
+  users
+SET
+  refresh_token = $1
+WHERE
+  id = $2
+`
+
+type SaveRefreshTokenParams struct {
+	RefreshToken pgtype.Text `db:"refresh_token" json:"refreshToken"`
+	ID           string      `db:"id" json:"id"`
+}
+
+func (q *Queries) SaveRefreshToken(ctx context.Context, arg SaveRefreshTokenParams) error {
+	_, err := q.db.Exec(ctx, saveRefreshToken, arg.RefreshToken, arg.ID)
+	return err
 }

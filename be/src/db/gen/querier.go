@@ -6,6 +6,8 @@ package gen
 
 import (
 	"context"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Querier interface {
@@ -17,6 +19,7 @@ type Querier interface {
 	GetLastNProducts(ctx context.Context, limit int32) ([]GetLastNProductsRow, error)
 	// products.sql
 	GetProductByID(ctx context.Context, id string) (Product, error)
+	GetRefreshToken(ctx context.Context, id string) (pgtype.Text, error)
 	// users.sql
 	GetUser(ctx context.Context, username string) (GetUserRow, error)
 	GetUserByID(ctx context.Context, id string) (GetUserByIDRow, error)
@@ -25,6 +28,7 @@ type Querier interface {
 	ListNProductsAfter(ctx context.Context, arg ListNProductsAfterParams) ([]ListNProductsAfterRow, error)
 	ListNProductsBefore(ctx context.Context, arg ListNProductsBeforeParams) ([]ListNProductsBeforeRow, error)
 	ListUsers(ctx context.Context) ([]User, error)
+	SaveRefreshToken(ctx context.Context, arg SaveRefreshTokenParams) error
 }
 
 var _ Querier = (*Queries)(nil)

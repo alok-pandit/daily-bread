@@ -10,6 +10,7 @@ import {
 
 import { ListUsers } from '../../apis/list-users'
 import { login } from '../../apis/login'
+import { Refresh } from '../../apis/refresh'
 import { clmx, textGradient } from '../../utils'
 
 const Login = () => {
@@ -87,12 +88,26 @@ const Login = () => {
                 `group bg-lime-500 active:bg-lime-500 focus-within:text-white rounded-lg p-4 active:scale-75`
               )}
               onPress={async () => {
-                const lg = await ListUsers()
+                const lg = await Refresh()
                 Alert.alert('Success', JSON.stringify(lg))
               }}
             >
               <Text className={clmx(`text-lg text-center text-white`)}>
                 Sign Up
+              </Text>
+            </Pressable>
+
+            <Pressable
+              className={clmx(
+                `group bg-lime-500 active:bg-lime-500 focus-within:text-white rounded-lg p-4 active:scale-75`
+              )}
+              onPress={async () => {
+                const lg = await ListUsers()
+                Alert.alert('Success', JSON.stringify(lg))
+              }}
+            >
+              <Text className={clmx(`text-lg text-center text-white`)}>
+                Get Users
               </Text>
             </Pressable>
           </View>

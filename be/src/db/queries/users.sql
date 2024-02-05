@@ -19,6 +19,7 @@ FROM
 WHERE
   id = $1;
 
+
 -- name: ListUsers :many
 SELECT
   *
@@ -37,6 +38,24 @@ VALUES
 
 -- name: DeleteUser :exec
 DELETE FROM
+  users
+WHERE
+  id = $1;
+
+
+-- name: SaveRefreshToken :exec
+UPDATE
+  users
+SET
+  refresh_token = $1
+WHERE
+  id = $2;
+
+
+-- name: GetRefreshToken :one
+SELECT
+  refresh_token
+FROM
   users
 WHERE
   id = $1;
