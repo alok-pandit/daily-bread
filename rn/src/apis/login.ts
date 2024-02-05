@@ -1,6 +1,6 @@
 import { Alert } from 'react-native'
 
-import { LoginAPIInputs } from '../codegen/types'
+import { LoginAPIInputs } from '../codegen'
 
 import { api } from '.'
 

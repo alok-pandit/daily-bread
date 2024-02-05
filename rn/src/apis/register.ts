@@ -1,6 +1,6 @@
 import { Alert } from 'react-native'
 
-import { CreateUserInput } from '../codegen/types'
+import { CreateUserInput } from '../codegen'
 
 import { api } from '.'
 

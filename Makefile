@@ -1,6 +1,6 @@
 run-be:
-	cd be && go vet && golangci-lint run src && tygo generate && air && cd ..
-
+	cd be && go vet && golangci-lint run src && tygo generate && cp ./../rn/src/codegen/index.ts ./../fe/src/codegen/ && air && rm -rf ./../types && cd ..
+	
 nodemon:
 	cd be && go vet && golangci-lint run src && nodemon --watch './**/*.go' --signal SIGTERM --exec 'go' run main.go && cd ..
 
