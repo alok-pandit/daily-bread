@@ -22,7 +22,6 @@ require (
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/gofiber/utils/v2 v2.0.0-beta.3 // indirect
-	github.com/jackc/pgio v1.0.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
 	github.com/jackc/puddle/v2 v2.2.1 // indirect
@@ -54,7 +53,6 @@ require (
 	github.com/gofiber/contrib/websocket v1.3.0
 	github.com/gofiber/storage/rueidis v1.2.1
 	github.com/google/uuid v1.5.0 // indirect
-	github.com/jackc/pgtype v1.14.1
 	github.com/jackc/pgx/v5 v5.5.1
 	github.com/klauspost/compress v1.17.4 // indirect
 	github.com/lib/pq v1.10.9
