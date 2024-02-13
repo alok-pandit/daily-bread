@@ -131,36 +131,41 @@ func Login(c *fiber.Ctx) error {
 	var user models.CreateUserInput
 
 	if err := c.BodyParser(&user); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "Invalid request body",
+		return c.Status(fiber.StatusBadRequest).JSON(models.LoginAPIResponse{
+			Success: false,
+			Message: "Invalid request body: " + err.Error(),
 		})
 	}
 
 	if err := utils.ValidateStruct(user); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": err.Error(),
+		return c.Status(fiber.StatusBadRequest).JSON(models.LoginAPIResponse{
+			Success: false,
+			Message: "Error validating input struct: " + err.Error(),
 		})
 	}
 
 	row, err := db.Sqlc.GetUser(c.Context(), user.Username)
 
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": err.Error(),
+		return c.Status(fiber.StatusInternalServerError).JSON(models.LoginAPIResponse{
+			Success: false,
+			Message: err.Error(),
 		})
 	}
 
 	ok, err := utils.ArgonMatch(user.Password, row.Password)
 
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": err.Error(),
+		return c.Status(fiber.StatusInternalServerError).JSON(models.LoginAPIResponse{
+			Success: false,
+			Message: err.Error(),
 		})
 	}
 
 	if !ok {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": "Password doesn't match",
+		return c.Status(fiber.StatusInternalServerError).JSON(models.LoginAPIResponse{
+			Success: false,
+			Message: "Invalid credentials",
 		})
 	}
 
@@ -170,7 +175,10 @@ func Login(c *fiber.Ctx) error {
 	}, nil)
 
 	if err != nil {
-		return c.SendStatus(fiber.StatusInternalServerError)
+		return c.Status(fiber.StatusInternalServerError).JSON(models.LoginAPIResponse{
+			Success: false,
+			Message: "Error in token creation: " + err.Error(),
+		})
 	}
 
 	refreshToken, err := paseto.NewV2().Encrypt([]byte(os.Getenv("JWT_SECRET")), utils.JWTPayloadStruct{
@@ -179,15 +187,19 @@ func Login(c *fiber.Ctx) error {
 	}, nil)
 
 	if err != nil {
-		return c.SendStatus(fiber.StatusInternalServerError)
+		return c.Status(fiber.StatusInternalServerError).JSON(models.LoginAPIResponse{
+			Success: false,
+			Message: "Error in token creation: " + err.Error(),
+		})
 	}
 
 	if err := db.Sqlc.SaveRefreshToken(c.Context(), gen.SaveRefreshTokenParams{
 		ID:           row.ID,
 		RefreshToken: pgtype.Text{String: refreshToken, Valid: true},
 	}); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "Invalid request body",
+		return c.Status(fiber.StatusBadRequest).JSON(models.LoginAPIResponse{
+			Success: false,
+			Message: "Error in refresh token creation: " + err.Error(),
 		})
 	}
 
@@ -207,7 +219,10 @@ func Login(c *fiber.Ctx) error {
 		Expires:  time.Now().Add(time.Minute * 60 * 24 * 365),
 	})
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{"Success": true})
+	return c.Status(fiber.StatusOK).JSON(models.LoginAPIResponse{
+		Success: true,
+		Message: "",
+	})
 
 }
 
