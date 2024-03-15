@@ -22,3 +22,7 @@ export interface LoginAPIInputs {
   username: string;
   password: string;
 }
+export interface LoginAPIResponse {
+  success: boolean;
+  message: string;
+}
