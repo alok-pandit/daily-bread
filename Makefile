@@ -12,11 +12,14 @@ nodemon-race:
 tidy:
 	cd be && go mod tidy && cd ..
 
+env-creation:
+	cd scripts/env && ./env && cd ..
+
 build-container:
 	cd be && docker build . -t alokpandit/db && cd ..
 
-run-container:
-	cd be && docker run --rm -d --net=host --env-file ./../.envrc --init alokpandit/db && cd ..
+run-container: env-creation
+	cd be && docker run --rm -d --net=host --env-file ./../scripts/env/.env --init alokpandit/db && cd ..
 
 container: build-container
 	make run-container
@@ -58,3 +61,7 @@ tnl:
 
 start:
 	docker compose up -d && ttab 'make run-be' && ttab 'make rn-start' && ttab 'make rn-android' && ttab 'make tnl'
+
+initial_setup: tidy
+	cd rn && npm i && cd .. && sudo snap install sqlc && curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sudo sh -s -- -b $(go env GOPATH)/bin v1.57.2 && go install github.com/gzuidhof/tygo@latest && go install github.com/cosmtrek/air@latest
+	
