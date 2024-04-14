@@ -35,17 +35,17 @@ func Initialize() {
 	})
 
 	limiterDB := rueidis.New(rueidis.Config{
-		InitAddress: []string{os.Getenv("REDIS_URL")},
+		InitAddress: []string{os.Getenv("redis_url")},
 		Username:    "",
 		Password:    "",
 		SelectDB:    1,
 		Reset:       false,
 		TLSConfig:   nil,
-		CacheTTL:    15 * time.Minute,
+		CacheTTL:    5 * time.Minute,
 	})
 
 	cacheDB := rueidis.New(rueidis.Config{
-		InitAddress: []string{os.Getenv("REDIS_URL")},
+		InitAddress: []string{os.Getenv("redis_url")},
 		Username:    "",
 		Password:    "",
 		SelectDB:    0,
@@ -57,11 +57,7 @@ func Initialize() {
 	app.Use(limiter.New(limiter.Config{
 		Storage:    limiterDB,
 		Expiration: 10 * time.Second,
-		Max:        100000,
-	}))
-
-	app.Use(compress.New(compress.Config{
-		Level: compress.LevelBestSpeed,
+		Max:        1000,
 	}))
 
 	app.Use(cache.New(cache.Config{
@@ -73,11 +69,15 @@ func Initialize() {
 		Storage:      cacheDB,
 	}))
 
+	app.Use(compress.New(compress.Config{
+		Level: compress.LevelBestSpeed,
+	}))
+
 	app.Use(etag.New(etag.Config{
 		Weak: true,
 	}))
 
-	// if os.Getenv("ENV") != "prod" {
+	// if os.Getenv("env") != "prod" {
 
 	app.Use(requestid.New())
 
@@ -103,15 +103,12 @@ func Initialize() {
 	app.Use(helmet.New())
 
 	app.Use(encryptcookie.New(encryptcookie.Config{
-		Key: os.Getenv("COOKIE_ENC_KEY"),
+		Key: os.Getenv("cookie_enc_key"),
 	}))
 
 	app.Use(healthcheck.New())
 
 	pool := db.ConnectPool()
-
-	// defer conn.Release()
-	// defer conn.Close(context.Background())
 
 	defer pool.Close()
 
@@ -164,6 +161,6 @@ func Initialize() {
 
 	api.Group("/example").Route("/", routes.ExamplesRouter)
 
-	log.Fatal(app.Listen(":" + os.Getenv("PORT")))
+	log.Fatal(app.Listen(":" + os.Getenv("port")))
 
 }

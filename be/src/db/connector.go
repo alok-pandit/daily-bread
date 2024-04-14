@@ -29,7 +29,7 @@ func ConnectPool() *pgxpool.Pool {
 
 func Connect() *pgx.Conn {
 
-	conn, err := pgx.Connect(context.Background(), os.Getenv("DB_URL"))
+	conn, err := pgx.Connect(context.Background(), os.Getenv("db_url"))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
 		os.Exit(1)

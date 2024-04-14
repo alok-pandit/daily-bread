@@ -76,7 +76,7 @@ func RefreshToken(c *fiber.Ctx) error {
 
 	var payload utils.JWTPayloadStruct
 
-	err := paseto.NewV2().Decrypt(token, []byte(os.Getenv("JWT_SECRET")), &payload, nil)
+	err := paseto.NewV2().Decrypt(token, []byte(os.Getenv("jwt_secret")), &payload, nil)
 
 	if time.Now().Compare(payload.ExpiresAt) > 0 {
 
@@ -105,7 +105,7 @@ func RefreshToken(c *fiber.Ctx) error {
 		})
 	}
 
-	encryptedToken, err := paseto.NewV2().Encrypt([]byte(os.Getenv("JWT_SECRET")), utils.JWTPayloadStruct{
+	encryptedToken, err := paseto.NewV2().Encrypt([]byte(os.Getenv("jwt_secret")), utils.JWTPayloadStruct{
 		ID:        payload.ID,
 		ExpiresAt: time.Now().Add(time.Minute * 15),
 	}, nil)
@@ -169,7 +169,7 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 
-	encryptedToken, err := paseto.NewV2().Encrypt([]byte(os.Getenv("JWT_SECRET")), utils.JWTPayloadStruct{
+	encryptedToken, err := paseto.NewV2().Encrypt([]byte(os.Getenv("jwt_secret")), utils.JWTPayloadStruct{
 		ID:        row.ID,
 		ExpiresAt: time.Now().Add(time.Minute * 15),
 	}, nil)
@@ -181,7 +181,7 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 
-	refreshToken, err := paseto.NewV2().Encrypt([]byte(os.Getenv("JWT_SECRET")), utils.JWTPayloadStruct{
+	refreshToken, err := paseto.NewV2().Encrypt([]byte(os.Getenv("jwt_secret")), utils.JWTPayloadStruct{
 		ID:        row.ID,
 		ExpiresAt: time.Now().Add(time.Minute * 60 * 24 * 365),
 	}, nil)

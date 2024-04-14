@@ -40,7 +40,7 @@ type JWTPayloadStruct struct {
 func GetPasetoConfig() func(*fiber.Ctx) error {
 
 	return pasetoware.New(pasetoware.Config{
-		SymmetricKey: []byte(os.Getenv("JWT_SECRET")),
+		SymmetricKey: []byte(os.Getenv("jwt_secret")),
 		TokenLookup:  [2]string{"cookie", "token"},
 		Validate: func(decrypted []byte) (any, error) {
 			var payload JWTPayloadStruct
