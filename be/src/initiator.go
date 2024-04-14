@@ -8,7 +8,6 @@ import (
 	"github.com/alok-pandit/daily-bread/src/db"
 	"github.com/alok-pandit/daily-bread/src/db/gen"
 	"github.com/alok-pandit/daily-bread/src/routes"
-	"github.com/gofiber/contrib/fiberzerolog"
 	"github.com/gofiber/contrib/websocket"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cache"
@@ -22,14 +21,13 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/gofiber/storage/rueidis"
-	"github.com/rs/zerolog"
 	"github.com/segmentio/encoding/json"
 )
 
 func Initialize() {
 
 	app := fiber.New(fiber.Config{
-		Prefork:      false,
+		Prefork:      true,
 		ServerHeader: "Fiber",
 		AppName:      "daily-bread",
 		JSONEncoder:  json.Marshal,
@@ -37,7 +35,7 @@ func Initialize() {
 	})
 
 	limiterDB := rueidis.New(rueidis.Config{
-		InitAddress: []string{"localhost:6379"},
+		InitAddress: []string{os.Getenv("REDIS_URL")},
 		Username:    "",
 		Password:    "",
 		SelectDB:    1,
@@ -47,7 +45,7 @@ func Initialize() {
 	})
 
 	cacheDB := rueidis.New(rueidis.Config{
-		InitAddress: []string{"localhost:6379"},
+		InitAddress: []string{os.Getenv("REDIS_URL")},
 		Username:    "",
 		Password:    "",
 		SelectDB:    0,
@@ -58,8 +56,8 @@ func Initialize() {
 
 	app.Use(limiter.New(limiter.Config{
 		Storage:    limiterDB,
-		Expiration: 15 * time.Minute,
-		Max:        25000,
+		Expiration: 10 * time.Second,
+		Max:        100000,
 	}))
 
 	app.Use(compress.New(compress.Config{
@@ -83,12 +81,12 @@ func Initialize() {
 
 	app.Use(requestid.New())
 
-	logger := zerolog.New(os.Stderr).With().Timestamp().Logger()
+	// logger := zerolog.New(os.Stderr).With().Timestamp().Logger()
 
-	app.Use(fiberzerolog.New(fiberzerolog.Config{
-		Logger: &logger,
-		Fields: []string{"ip", "port", "latency", "time", "status", "${locals:requestid}", "method", "url", "error"},
-	}))
+	// app.Use(fiberzerolog.New(fiberzerolog.Config{
+	// 	Logger: &logger,
+	// 	Fields: []string{"ip", "port", "latency", "time", "status", "${locals:requestid}", "method", "url", "error"},
+	// }))
 
 	// } else {
 
@@ -110,11 +108,14 @@ func Initialize() {
 
 	app.Use(healthcheck.New())
 
-	conn := db.Connect()
+	pool := db.ConnectPool()
 
-	defer conn.Release()
+	// defer conn.Release()
+	// defer conn.Close(context.Background())
 
-	db.Sqlc = gen.New(conn)
+	defer pool.Close()
+
+	db.Sqlc = gen.New(pool)
 
 	app.Use("/ws", func(c *fiber.Ctx) error {
 

@@ -12,11 +12,11 @@ import (
 
 func Config() *pgxpool.Config {
 
-	const defaultMaxConns = int32(4)
+	const defaultMaxConns = int32(200)
 	const defaultMinConns = int32(0)
-	const defaultMaxConnLifetime = time.Hour
+	const defaultMaxConnLifetime = time.Hour * 1
 	const defaultMaxConnIdleTime = time.Minute * 30
-	const defaultHealthCheckPeriod = time.Minute
+	const defaultHealthCheckPeriod = time.Minute * 1
 	const defaultConnectTimeout = time.Second * 5
 
 	var DATABASE_URL string = os.Getenv("DB_URL")

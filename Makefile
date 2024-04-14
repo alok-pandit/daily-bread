@@ -13,13 +13,13 @@ tidy:
 	cd be && go mod tidy && cd ..
 
 build-container:
-	cd be && sudo docker build . -t alokpandit/hcab && cd ..
+	cd be && docker build . -t alokpandit/db && cd ..
 
 run-container:
-	cd be && sudo docker run --rm -it -p 5000:5000 alokpandit/hcab && cd ..
+	cd be && docker run --rm -d --net=host --env-file ./../.envrc --init alokpandit/db && cd ..
 
 container:
-	cd be && make build-container && make run-container && cd ..
+	make build-container && make run-container
 
 deploy:
 	cd be && make build-container && sudo docker push alokpandit/hcab && cd ..
