@@ -64,56 +64,75 @@ func CreateUser(c *fiber.Ctx) error {
 
 }
 
+// RefreshToken godoc
+//
+//	@Summary		Refresh user's token
+//	@Description	Refresh user's token
+//	@Tags			users
+//	@Accept			json
+//	@Produce		json
+//	@Success		200		{string}  string  "OK"
+//	@Failure		400		{string}  error  "Bad Request"
+//	@Router			/api/user/RefreshToken [post]
 func RefreshToken(c *fiber.Ctx) error {
 
+	// Get the refresh token from the cookie
 	token := c.Cookies("refresh_token")
 
+	// If the refresh token is not found, return an unauthorized error
 	if len(token) == 0 {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"error": "Refresh token not found",
 		})
 	}
 
+	// Decrypt the refresh token using the secret key
 	var payload utils.JWTPayloadStruct
-
 	err := paseto.NewV2().Decrypt(token, []byte(os.Getenv("jwt_secret")), &payload, nil)
 
+	// If the token has expired, return a bad request error
 	if time.Now().Compare(payload.ExpiresAt) > 0 {
-
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "Refresh token expired",
 		})
 	}
 
+	// If there is an error decrypting the token, return a bad request error
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "Invalid refresh token",
 		})
 	}
 
+	// Get the user's refresh token from the database
 	t, err := db.Sqlc.GetRefreshToken(c.Context(), payload.ID)
 
+	// If there is an error getting the user's refresh token, return a bad request error
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "Invalid refresh token",
 		})
 	}
 
+	// If the token in the database does not match the token in the request, return a bad request error
 	if t.String != token {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "Invalid refresh token",
 		})
 	}
 
+	// Encrypt a new token using the secret key and the user's ID
 	encryptedToken, err := paseto.NewV2().Encrypt([]byte(os.Getenv("jwt_secret")), utils.JWTPayloadStruct{
 		ID:        payload.ID,
 		ExpiresAt: time.Now().Add(time.Minute * 15),
 	}, nil)
 
+	// If there is an error encrypting the token, return an internal server error
 	if err != nil {
 		return c.SendStatus(fiber.StatusInternalServerError)
 	}
 
+	// Set the new token as a cookie in the response
 	c.Cookie(&fiber.Cookie{
 		Name:     "token",
 		Value:    encryptedToken,
@@ -122,6 +141,7 @@ func RefreshToken(c *fiber.Ctx) error {
 		Expires:  time.Now().Add(time.Minute * 15),
 	})
 
+	// Return a success message
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"Success": payload})
 
 }

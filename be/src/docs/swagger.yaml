@@ -20,4 +20,23 @@ paths:
       summary: Create new user
       tags:
       - users
+  /api/user/RefreshToken:
+    post:
+      consumes:
+      - application/json
+      description: Refresh user's token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: Refresh user's token
+      tags:
+      - users
 swagger: "2.0"

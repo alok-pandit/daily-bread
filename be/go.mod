@@ -5,8 +5,9 @@ go 1.21.5
 require (
 	github.com/gofiber/fiber/v2 v2.52.0
 	github.com/gofiber/storage/rueidis v1.2.2
+	github.com/gofiber/swagger v1.0.0
 	github.com/o1egl/paseto v1.0.0
-	github.com/swaggo/swag v1.16.2
+	github.com/swaggo/swag v1.16.3
 )
 
 require (
@@ -34,6 +35,7 @@ require (
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
 	github.com/savsgio/gotils v0.0.0-20230208104028-c358bd845dee // indirect
 	github.com/segmentio/asm v1.1.3 // indirect
+	github.com/swaggo/files/v2 v2.0.0 // indirect
 	github.com/tinylib/msgp v1.1.8 // indirect
 	golang.org/x/crypto v0.18.0 // indirect
 	golang.org/x/net v0.19.0 // indirect

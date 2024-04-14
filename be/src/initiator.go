@@ -7,6 +7,7 @@ import (
 
 	"github.com/alok-pandit/daily-bread/src/db"
 	"github.com/alok-pandit/daily-bread/src/db/gen"
+	_ "github.com/alok-pandit/daily-bread/src/docs"
 	"github.com/alok-pandit/daily-bread/src/routes"
 	"github.com/gofiber/contrib/websocket"
 	"github.com/gofiber/fiber/v2"
@@ -21,6 +22,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/gofiber/storage/rueidis"
+	"github.com/gofiber/swagger"
 	"github.com/segmentio/encoding/json"
 )
 
@@ -113,6 +115,8 @@ func Initialize() {
 	defer pool.Close()
 
 	db.Sqlc = gen.New(pool)
+
+	app.Get("/swagger/*", swagger.HandlerDefault)
 
 	app.Use("/ws", func(c *fiber.Ctx) error {
 

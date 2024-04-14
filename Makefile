@@ -44,7 +44,7 @@ migration-fix:
 sqlc-compile:
 	cd be && sqlc compile && cd ..
 
-sqlc-gen:
+sqlc-gen: sqlc-compile
 	cd be && sqlc generate && cd ..
 
 swag-doc:
@@ -63,5 +63,5 @@ start:
 	docker compose up -d && ttab 'make run-be' && ttab 'make rn-start' && ttab 'make rn-android' && ttab 'make tnl'
 
 initial_setup: tidy
-	cd rn && npm i && cd .. && sudo snap install sqlc && curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sudo sh -s -- -b $(go env GOPATH)/bin v1.57.2 && go install github.com/gzuidhof/tygo@latest && go install github.com/cosmtrek/air@latest
+	cd rn && npm i && cd .. && sudo snap install sqlc && curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sudo sh -s -- -b $(go env GOPATH)/bin v1.57.2 && go install github.com/gzuidhof/tygo@latest && go install github.com/cosmtrek/air@latest && go install github.com/swaggo/swag/cmd/swag@latest
 	
