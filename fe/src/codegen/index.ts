@@ -4,25 +4,25 @@
 // source: products.go
 
 export interface GetProductsInput {
-  before: string;
-  after: string;
-  first: number /* int32 */;
-  last: number /* int32 */;
+  before: string
+  after: string
+  first: number /* int32 */
+  last: number /* int32 */
 }
 
 //////////
 // source: users.go
 
 export interface CreateUserInput {
-  fullname: string;
-  username: string;
-  password: string;
+  fullname: string
+  username: string
+  password: string
 }
 export interface LoginAPIInputs {
-  username: string;
-  password: string;
+  username: string
+  password: string
 }
 export interface LoginAPIResponse {
-  success: boolean;
-  message: string;
+  success: boolean
+  message: string
 }

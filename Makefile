@@ -59,6 +59,8 @@ rn-android:
 tnl:
 	ngrok http --domain=${ngrok_static_url} ${port}
 
+fe:
+	cd fe && pnpm dev
 start:
 	docker compose up -d && ttab 'make run-be' && ttab 'make rn-start' && ttab 'make rn-android' && ttab 'make tnl'
 

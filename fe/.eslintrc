@@ -1,0 +1,100 @@
+{
+    "extends": [
+      // By extending from a plugin config, we can get recommended rules without having to add them manually.
+      "next/core-web-vitals",
+      "eslint:recommended",
+      "plugin:import/recommended",
+    //   "plugin:security/recommended",
+      "plugin:xss/recommended",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:import/typescript",
+      // This disables the formatting rules in ESLint that Prettier is going to be responsible for handling.
+      // Make sure it"s always the last config, so it gets the chance to override other configs.
+      "eslint-config-prettier"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "settings": {
+      "import/parsers": {
+        "@typescript-eslint/parser": [
+          ".ts",
+          ".tsx"
+        ]
+      },
+      // Tells eslint how to resolve imports
+      "import/resolver": {
+        "typescript": true,
+        "node": {
+          "extensions": [
+            ".js",
+            ".jsx",
+            ".ts",
+            ".tsx"
+          ]
+        }
+      }
+    },
+    "plugins": [
+      "unused-imports",
+      "import",
+      "no-secrets",
+      "@typescript-eslint"
+    ],
+    "rules": {
+      "no-console": "error",
+      // Add your own rules here to override ones from the extended configs.
+      "unused-imports/no-unused-imports": 2,
+      "unused-imports/no-unused-imports-ts": 2,
+      "unused-imports/no-unused-vars": [
+        "error",
+        {
+          "vars": "all",
+          "varsIgnorePattern": "^_",
+          "args": "after-used",
+          "argsIgnorePattern": "^_"
+        }
+      ],
+      "no-secrets/no-secrets": 2,
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          "vars": "all",
+          "varsIgnorePattern": "^_",
+          "args": "after-used",
+          "argsIgnorePattern": "^_"
+        }
+      ],
+      "import/no-named-as-default": 0,
+      "import/no-unresolved": 0,
+      "import/order": [
+        "error",
+        {
+          "alphabetize": {
+            "order": "asc",
+            "caseInsensitive": true
+          },
+          "newlines-between": "always",
+          "groups": [
+            "builtin",
+            "external",
+            "parent",
+            "sibling",
+            "index"
+          ],
+          "pathGroups": [
+            {
+              "pattern": "~/**",
+              "group": "external",
+              "position": "before"
+            }
+          ],
+          "pathGroupsExcludedImportTypes": [
+            "builtin"
+          ]
+        }
+      ]
+    },
+    "ignorePatterns": [
+      "**/*.d.ts",
+      "*.config.js"
+    ]
+  }
