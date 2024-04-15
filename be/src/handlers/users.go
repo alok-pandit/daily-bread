@@ -14,31 +14,36 @@ import (
 )
 
 // CreateUser godoc
-//
-//	@Summary		Create new user
-//	@Description	Create new user
-//	@Tags			users
-//	@Accept			json
-//	@Produce		json
-//	@Success		201		{string}  string  "OK"
-//	@Failure		400		{string}  error  "Bad Request"
-//	@Router			/api/user/CreateUser [post]
+// @Summary Create a new user
+// @Description Create a new user
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param body body models.CreateUserInput true "User object"
+// @Success 201 {object} models.CreateUserInput
+// @Failure 400 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /api/user [post]
 func CreateUser(c *fiber.Ctx) error {
 
+	// Declare a new user object
 	var newUser models.CreateUserInput
 
+	// Parse the request body into the user object
 	if err := c.BodyParser(&newUser); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "Invalid request body",
 		})
 	}
 
+	// Validate the user object
 	if err := utils.ValidateStruct(newUser); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": err.Error(),
 		})
 	}
 
+	// Hash the user's password
 	hashedPassword, err := utils.ArgonHash(newUser.Password)
 
 	if err != nil {
@@ -47,6 +52,7 @@ func CreateUser(c *fiber.Ctx) error {
 		})
 	}
 
+	// Create the user in the database
 	if err := db.Sqlc.CreateUser(c.Context(), gen.CreateUserParams{
 		ID:       utils.GetKSUID(),
 		Fullname: newUser.Fullname,
@@ -58,8 +64,10 @@ func CreateUser(c *fiber.Ctx) error {
 		})
 	}
 
+	// Clear the user's password from the response
 	newUser.Password = ""
 
+	// Return the created user
 	return c.Status(fiber.StatusCreated).JSON(newUser)
 
 }
@@ -146,83 +154,92 @@ func RefreshToken(c *fiber.Ctx) error {
 
 }
 
+// Login godoc
+// @Summary		Login user
+// @Description	Login user
+// @Tags			users
+// @Accept			json
+// @Produce		json
+// @Param		body	body	models.CreateUserInput true "User object"
+// @Success		200		{string}  string  "OK"
+// @Failure		400		{string}  error  "Bad Request"
+// @Router			/api/user/Login [post]
 func Login(c *fiber.Ctx) error {
 
+	// Validate the request body
 	var user models.CreateUserInput
-
 	if err := c.BodyParser(&user); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(models.LoginAPIResponse{
-			Success: false,
-			Message: "Invalid request body: " + err.Error(),
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid request body: " + err.Error(),
 		})
 	}
 
+	// Validate the user object
 	if err := utils.ValidateStruct(user); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(models.LoginAPIResponse{
-			Success: false,
-			Message: "Error validating input struct: " + err.Error(),
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": err.Error(),
 		})
 	}
 
+	// Get the user from the database
 	row, err := db.Sqlc.GetUser(c.Context(), user.Username)
 
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(models.LoginAPIResponse{
-			Success: false,
-			Message: err.Error(),
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": err.Error(),
 		})
 	}
 
+	// Check if the user exists
 	ok, err := utils.ArgonMatch(user.Password, row.Password)
 
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(models.LoginAPIResponse{
-			Success: false,
-			Message: err.Error(),
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": err.Error(),
 		})
 	}
 
 	if !ok {
-		return c.Status(fiber.StatusInternalServerError).JSON(models.LoginAPIResponse{
-			Success: false,
-			Message: "Invalid credentials",
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Invalid credentials",
 		})
 	}
 
+	// Encrypt a new token using the secret key and the user's ID
 	encryptedToken, err := paseto.NewV2().Encrypt([]byte(os.Getenv("jwt_secret")), utils.JWTPayloadStruct{
 		ID:        row.ID,
 		ExpiresAt: time.Now().Add(time.Minute * 15),
 	}, nil)
 
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(models.LoginAPIResponse{
-			Success: false,
-			Message: "Error in token creation: " + err.Error(),
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Error in token creation: " + err.Error(),
 		})
 	}
 
+	// Encrypt a new refresh token using the secret key and the user's ID
 	refreshToken, err := paseto.NewV2().Encrypt([]byte(os.Getenv("jwt_secret")), utils.JWTPayloadStruct{
 		ID:        row.ID,
 		ExpiresAt: time.Now().Add(time.Minute * 60 * 24 * 365),
 	}, nil)
 
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(models.LoginAPIResponse{
-			Success: false,
-			Message: "Error in token creation: " + err.Error(),
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Error in token creation: " + err.Error(),
 		})
 	}
 
+	// Save the refresh token in the database
 	if err := db.Sqlc.SaveRefreshToken(c.Context(), gen.SaveRefreshTokenParams{
 		ID:           row.ID,
 		RefreshToken: pgtype.Text{String: refreshToken, Valid: true},
 	}); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(models.LoginAPIResponse{
-			Success: false,
-			Message: "Error in refresh token creation: " + err.Error(),
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Error in refresh token creation: " + err.Error(),
 		})
 	}
 
+	// Set the new token as a cookie in the response
 	c.Cookie(&fiber.Cookie{
 		Name:     "token",
 		Value:    encryptedToken,
@@ -231,6 +248,7 @@ func Login(c *fiber.Ctx) error {
 		Expires:  time.Now().Add(time.Minute * 15),
 	})
 
+	// Set the new refresh token as a cookie in the response
 	c.Cookie(&fiber.Cookie{
 		Name:     "refresh_token",
 		Value:    refreshToken,
@@ -239,13 +257,21 @@ func Login(c *fiber.Ctx) error {
 		Expires:  time.Now().Add(time.Minute * 60 * 24 * 365),
 	})
 
-	return c.Status(fiber.StatusOK).JSON(models.LoginAPIResponse{
-		Success: true,
-		Message: "",
-	})
+	// Return a success message
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"Success": true, "Message": ""})
 
 }
 
+// GetAllUsers godoc
+// @Summary Get all users
+// @Description Get all users from the database
+// @Tags users
+// @Accept json
+// @Produce json
+// @Success 200 {array} models.User "A list of all users"
+// @Failure 400 {object} map[string]interface{} "Bad request"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
+// @Router /api/user [get]
 func GetAllUsers(c *fiber.Ctx) error {
 	users, err := db.Sqlc.ListUsers(c.Context())
 
@@ -258,6 +284,17 @@ func GetAllUsers(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(users)
 }
 
+// GetUserByID godoc
+// @Summary Get a user by ID
+// @Description Get a user by ID
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param id path string true "User ID"
+// @Success 200 {object} models.User
+// @Failure 404 {object} map[string]interface{}
+// @Failure 500 {object} map[string]interface{}
+// @Router /api/user/{id} [get]
 func GetUserByID(c *fiber.Ctx) error {
 
 	id := c.Params("id")
