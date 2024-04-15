@@ -25,7 +25,7 @@ export const FunkyBackground = (props: { children: ReactNode }) => {
 
 const loginBoxCls = clmx(
   'flex flex-col items-center justify-between',
-  'p-4 rounded-lg h-96 min-w-2/3',
+  'p-4 rounded-lg h-96 sm:min-w-2/3 lg:w-2/3',
   'tinted-glass shadow-yellow-400 shadow-md'
 )
 

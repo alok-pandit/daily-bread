@@ -167,7 +167,7 @@ func RefreshToken(c *fiber.Ctx) error {
 func Login(c *fiber.Ctx) error {
 
 	// Validate the request body
-	var user models.CreateUserInput
+	var user models.LoginAPIInput
 	if err := c.BodyParser(&user); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "Invalid request body: " + err.Error(),
@@ -257,8 +257,12 @@ func Login(c *fiber.Ctx) error {
 		Expires:  time.Now().Add(time.Minute * 60 * 24 * 365),
 	})
 
+	resp := models.LoginAPIResponse{
+		Success: true,
+		Message: "",
+	}
 	// Return a success message
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{"Success": true, "Message": ""})
+	return c.Status(fiber.StatusOK).JSON(resp)
 
 }
 
