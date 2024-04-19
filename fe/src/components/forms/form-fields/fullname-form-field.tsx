@@ -9,7 +9,7 @@ import { clmx } from '@/utils'
 const FullnameFormField = () => {
   const { register } = useFormContext()
   return (
-    <Form.Field className="grid mb-[10px]" name="fullName">
+    <Form.Field className="grid mb-[10px]" name="fullname">
       <div className="flex items-baseline justify-between">
         <Form.Label
           className={clmx(
@@ -33,7 +33,7 @@ const FullnameFormField = () => {
       </div>
 
       <Form.Control asChild>
-        <TextInput type="text" required {...register('fullName')} />
+        <TextInput type="text" required {...register('fullname')} />
       </Form.Control>
     </Form.Field>
   )

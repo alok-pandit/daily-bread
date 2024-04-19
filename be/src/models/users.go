@@ -6,6 +6,11 @@ type CreateUserInput struct {
 	Password string `json:"password" validate:"required"`
 }
 
+type CreateUserResponse struct {
+	Message string `json:"message" validate:"required"`
+	Success bool   `json:"success" validate:"required"`
+}
+
 type LoginAPIInput struct {
 	Username string `json:"username" validate:"required"`
 	Password string `json:"password" validate:"required"`

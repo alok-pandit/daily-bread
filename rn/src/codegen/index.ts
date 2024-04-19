@@ -4,7 +4,8 @@
 // source: common.go
 
 export interface ErrorResponse {
-  error: string;
+  success: boolean;
+  message: string;
 }
 
 //////////
@@ -24,6 +25,10 @@ export interface CreateUserInput {
   fullname: string;
   username: string;
   password: string;
+}
+export interface CreateUserResponse {
+  message: string;
+  success: boolean;
 }
 export interface LoginAPIInput {
   username: string;

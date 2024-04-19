@@ -31,15 +31,17 @@ func CreateUser(c *fiber.Ctx) error {
 
 	// Parse the request body into the user object
 	if err := c.BodyParser(&newUser); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "Invalid request body",
+		return c.Status(fiber.StatusBadRequest).JSON(models.ErrorResponse{
+			Success: false,
+			Message: err.Error(),
 		})
 	}
 
 	// Validate the user object
 	if err := utils.ValidateStruct(newUser); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": err.Error(),
+		return c.Status(fiber.StatusBadRequest).JSON(models.ErrorResponse{
+			Success: false,
+			Message: err.Error(),
 		})
 	}
 
@@ -47,8 +49,9 @@ func CreateUser(c *fiber.Ctx) error {
 	hashedPassword, err := utils.ArgonHash(newUser.Password)
 
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": err.Error(),
+		return c.Status(fiber.StatusInternalServerError).JSON(models.ErrorResponse{
+			Success: false,
+			Message: err.Error(),
 		})
 	}
 
@@ -59,16 +62,22 @@ func CreateUser(c *fiber.Ctx) error {
 		Username: newUser.Username,
 		Password: hashedPassword,
 	}); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": err.Error(),
+		return c.Status(fiber.StatusInternalServerError).JSON(models.ErrorResponse{
+			Success: false,
+			Message: err.Error(),
 		})
 	}
 
 	// Clear the user's password from the response
 	newUser.Password = ""
 
+	res := models.CreateUserResponse{
+		Success: true,
+		Message: "User created successfully",
+	}
+
 	// Return the created user
-	return c.Status(fiber.StatusCreated).JSON(newUser)
+	return c.Status(fiber.StatusCreated).JSON(res)
 
 }
 

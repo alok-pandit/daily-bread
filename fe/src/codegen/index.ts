@@ -4,32 +4,37 @@
 // source: common.go
 
 export interface ErrorResponse {
-  error: string
+  success: boolean;
+  message: string;
 }
 
 //////////
 // source: products.go
 
 export interface GetProductsInput {
-  before: string
-  after: string
-  first: number /* int32 */
-  last: number /* int32 */
+  before: string;
+  after: string;
+  first: number /* int32 */;
+  last: number /* int32 */;
 }
 
 //////////
 // source: users.go
 
 export interface CreateUserInput {
-  fullname: string
-  username: string
-  password: string
+  fullname: string;
+  username: string;
+  password: string;
+}
+export interface CreateUserResponse {
+  message: string;
+  success: boolean;
 }
 export interface LoginAPIInput {
-  username: string
-  password: string
+  username: string;
+  password: string;
 }
 export interface LoginAPIResponse {
-  success: boolean
-  message: string
+  success: boolean;
+  message: string;
 }

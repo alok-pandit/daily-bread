@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as Form from '@radix-ui/react-form'
 import { m } from 'framer-motion'
+import { useRouter } from 'next/navigation'
 import { FormProvider, useForm } from 'react-hook-form'
 import * as z from 'zod'
 
@@ -8,16 +9,18 @@ import FullnameFormField from '../form-fields/fullname-form-field'
 import PasswordFormField from '../form-fields/password-form-field'
 import UsernameFormField from '../form-fields/username-form-field'
 
+import { CreateUserResponse, ErrorResponse } from '@/codegen'
 import Button from '@/components/ui-primitives/button'
 import Separator from '@/components/ui-primitives/separator'
+import useSignUpMutation from '@/hooks/sign-up'
 
 const formSchema = z.object({
-  fullName: z.string().min(4),
+  fullname: z.string().min(4),
   username: z.string().min(4),
   password: z.string().min(4)
 })
 const defaultValues = {
-  fullName: '',
+  fullname: '',
   username: '',
   password: ''
 }
@@ -43,15 +46,19 @@ const SignUpForm = () => {
     resolver: zodResolver(formSchema),
     defaultValues
   })
-  // const router = useRouter()
-  // const [_, signUpMutation] = useSignUpMutation()
+
+  const router = useRouter()
+
+  const signUpMutation = useSignUpMutation()
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // eslint-disable-next-line no-console
-    console.log(values)
-    // const res = await signUpMutation(values)
-    // if (res.data?.SignUp.success) {
-    //   router.replace('/dashboard')
-    // }
+    const res: CreateUserResponse | ErrorResponse =
+      await signUpMutation.mutateAsync(values)
+    if (res.success) {
+      router.push('/dashboard')
+    } else {
+      window.alert(res)
+    }
   }
 
   return (
