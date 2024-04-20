@@ -25,7 +25,7 @@ container: build-container
 	make run-container
 
 deploy:
-	cd be && make build-container && sudo docker push alokpandit/hcab && cd ..
+	cd be && make build-container && docker push alokpandit/hcab && cd ..
 
 migration-create:
 	@read -p "Enter Migration Name (In Snake Case): " name; \
@@ -64,6 +64,6 @@ fe:
 start:
 	docker compose up -d && ttab 'make run-be' && ttab 'make rn-start' && ttab 'make rn-android' && ttab 'make tnl'
 
-initial_setup: tidy
+initial-setup: tidy
 	cd rn && npm i && cd .. && sudo snap install sqlc && curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sudo sh -s -- -b $(go env GOPATH)/bin v1.57.2 && go install github.com/gzuidhof/tygo@latest && go install github.com/cosmtrek/air@latest && go install github.com/swaggo/swag/cmd/swag@latest
 	
