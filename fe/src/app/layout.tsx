@@ -5,6 +5,8 @@ import './globals.css'
 import Provider from './providers'
 import { BgMain } from './styles'
 
+import { clmx } from '@/utils'
+
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -21,7 +23,9 @@ export default function RootLayout({
     <Provider>
       <html lang="en">
         <body className={inter.className}>
-          <BgMain>{children}</BgMain>
+          <BgMain className={clmx(`overflow-y-hidden max-h-screen`)}>
+            {children}
+          </BgMain>
         </body>
       </html>
     </Provider>

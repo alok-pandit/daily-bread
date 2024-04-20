@@ -12,7 +12,7 @@ export const GetProducts = async ({
     .post('products/list', {
       before: '',
       after: pageParam,
-      first: 100,
+      first: Number(process.env.NEXT_PUBLIC_PAGE_COUNT),
       last: 0
     })
     .then((r) => r.data)

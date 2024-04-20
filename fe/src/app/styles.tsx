@@ -32,10 +32,10 @@ const loginBoxCls = clmx(
 export const LoginBox = w.div(loginBoxCls)
 
 const bgCls = clmx(
-  'flex min-h-screen flex-col text-white',
-  'p-24 items-center justify-center',
-  'bg-[url("/images/light_bg.jpg")] dark:bg-[url("/images/dark_bg.jpg")]',
-  'bg-cover bg-no-repeat bg-center'
+  `flex min-h-screen flex-col text-white`,
+  `p-24 items-center justify-center`,
+  `bg-[url("/images/light_bg.jpg")] dark:bg-[url("/images/dark_bg.jpg")]`,
+  `bg-cover bg-no-repeat bg-center overflow-hidden`
 )
 
 export const BgMain = w.main(bgCls)
