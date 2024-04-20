@@ -56,7 +56,8 @@ ORDER BY
 WITH
   SelectedProducts AS (
     SELECT
-      *
+      *,
+      COUNT(*) OVER () AS total_count
     FROM
       products
     WHERE

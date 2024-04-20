@@ -17,6 +17,17 @@ export interface GetProductsInput {
   first: number /* int32 */;
   last: number /* int32 */;
 }
+export interface GetProductsResponse {
+  id: string;
+  name: string;
+  description: string;
+  price: number /* float64 */;
+  images: string[];
+  quantity: number /* int */;
+  lastCursor: string;
+  firstCursor: string;
+  totalCount: number /* int32 */;
+}
 
 //////////
 // source: users.go
