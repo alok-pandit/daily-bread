@@ -15,7 +15,7 @@ const UsernameFormField = () => {
           className={clmx(
             'text-[15px] font-medium leading-[35px]',
             // `${textGradient}`
-            'text-white'
+            'text-white dark:text-primary-100'
           )}
         >
           Username:

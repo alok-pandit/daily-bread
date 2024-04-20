@@ -19,7 +19,7 @@ export const Button1 = w.button(
   clmx(
     'relative inline-flex items-center justify-center',
     'px-8 py-4 overflow-hidden',
-    'text-lg font-bold text-white',
+    'text-lg font-bold text-white dark:text-primary-100',
     'transition-all duration-200 bg-gray-900',
     'font-pj rounded-xl focus:outline-none',
     'focus:ring-2 focus:ring-offset-2 focus:ring-gray-900'

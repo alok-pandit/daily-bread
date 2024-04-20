@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "3.3.4",
-    "@koale/useworker": "4.0.2",
+    "@radix-ui/react-alert-dialog": "1.0.5",
     "@radix-ui/react-dialog": "1.0.5",
     "@radix-ui/react-form": "0.0.3",
     "@radix-ui/react-icons": "1.3.0",

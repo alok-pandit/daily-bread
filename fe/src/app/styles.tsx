@@ -25,16 +25,16 @@ export const FunkyBackground = (props: { children: ReactNode }) => {
 
 const loginBoxCls = clmx(
   'flex flex-col items-center justify-between',
-  'p-4 rounded-lg h-96 sm:min-w-2/3 lg:w-2/3',
+  'p-4 rounded-lg h-96 sm:min-w-2/4 lg:w-[62.5%]',
   'tinted-glass shadow-yellow-400 shadow-md'
 )
 
 export const LoginBox = w.div(loginBoxCls)
 
 const bgCls = clmx(
-  'flex min-h-screen flex-col',
-  'items-center justify-center',
-  'p-24 bg-[url("/images/light_bg.jpg")] dark:bg-[url("/images/dark_bg.jpg")]',
+  'flex min-h-screen flex-col text-white',
+  'p-24 items-center justify-center',
+  'bg-[url("/images/light_bg.jpg")] dark:bg-[url("/images/dark_bg.jpg")]',
   'bg-cover bg-no-repeat bg-center'
 )
 

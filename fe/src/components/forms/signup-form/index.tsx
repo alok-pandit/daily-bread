@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as Form from '@radix-ui/react-form'
 import { m } from 'framer-motion'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import * as z from 'zod'
 
@@ -9,7 +10,7 @@ import FullnameFormField from '../form-fields/fullname-form-field'
 import PasswordFormField from '../form-fields/password-form-field'
 import UsernameFormField from '../form-fields/username-form-field'
 
-import { CreateUserResponse, ErrorResponse } from '@/codegen'
+import AlertNotification from '@/components/ui-primitives/alerts/alert-notification'
 import Button from '@/components/ui-primitives/button'
 import Separator from '@/components/ui-primitives/separator'
 import useSignUpMutation from '@/hooks/sign-up'
@@ -51,13 +52,14 @@ const SignUpForm = () => {
 
   const signUpMutation = useSignUpMutation()
 
+  const [showAlert, setshowAlert] = useState({ show: false, message: '' })
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const res: CreateUserResponse | ErrorResponse =
-      await signUpMutation.mutateAsync(values)
+    const res = await signUpMutation.mutateAsync(values)
     if (res.success) {
       router.push('/dashboard')
     } else {
-      window.alert(res)
+      setshowAlert({ show: true, message: String(res) })
     }
   }
 
@@ -89,6 +91,15 @@ const SignUpForm = () => {
           </div>
         </Form.Root>
       </FormProvider>
+      {showAlert.show && (
+        <AlertNotification
+          alertActiontext="Ok"
+          alertDescription={showAlert.message}
+          alertTitle="Error"
+          hideTrigger={true}
+          actionFn={setshowAlert}
+        />
+      )}
     </>
   )
 }

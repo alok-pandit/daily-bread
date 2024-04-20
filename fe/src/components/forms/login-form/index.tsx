@@ -5,6 +5,7 @@ import * as Form from '@radix-ui/react-form'
 import { MoonIcon, SunIcon } from '@radix-ui/react-icons'
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import * as z from 'zod'
 
@@ -12,10 +13,11 @@ import Button from '../../ui-primitives/button'
 import PopupDialog from '../../ui-primitives/dialog'
 import PasswordFormField from '../form-fields/password-form-field'
 import UsernameFormField from '../form-fields/username-form-field'
-import SignUpForm from '../signup-form'
 
 import { darkAtom } from '@/atoms'
+import AlertNotification from '@/components/ui-primitives/alerts/alert-notification'
 import ToggleSwitch from '@/components/ui-primitives/toggle-switch'
+import useLoginMutation from '@/hooks/login'
 
 const formSchema = z.object({
   username: z.string().min(4),
@@ -33,10 +35,17 @@ const LoginForm = () => {
     defaultValues
   })
 
+  const loginMutation = useLoginMutation()
+
+  const [showAlert, setshowAlert] = useState({ show: false, message: '' })
+
   async function onSubmit(creds: z.infer<typeof formSchema>) {
-    // eslint-disable-next-line no-console
-    console.log(creds)
-    router.push('/dashboard')
+    const res = await loginMutation.mutateAsync(creds)
+    if (res.success) {
+      router.push('/dashboard')
+    } else {
+      setshowAlert({ show: true, message: String(res) })
+    }
   }
 
   const [isDark, setIsDark] = useAtom(darkAtom)
@@ -72,7 +81,7 @@ const LoginForm = () => {
           </div> */}
 
           {/* <Separator /> */}
-          <div className="min-w-2/3">
+          <div className="w-[55%]">
             <UsernameFormField />
 
             <PasswordFormField />
@@ -84,9 +93,7 @@ const LoginForm = () => {
             <PopupDialog
               dialogTriggerText={'Sign Up'}
               dialogTitleText={'Sign Up'}
-            >
-              <SignUpForm />
-            </PopupDialog>
+            ></PopupDialog>
           </div>
           <span className="flex flex-1 justify-start w-full mt-4">
             <ToggleSwitch
@@ -97,6 +104,15 @@ const LoginForm = () => {
           </span>
         </Form.Root>
       </FormProvider>
+      {showAlert.show && (
+        <AlertNotification
+          alertActiontext="Ok"
+          alertDescription={showAlert.message}
+          alertTitle="Error"
+          hideTrigger={true}
+          actionFn={setshowAlert}
+        />
+      )}
     </>
   )
 }
