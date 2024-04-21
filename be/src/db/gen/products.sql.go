@@ -15,7 +15,8 @@ const getFirstNProducts = `-- name: GetFirstNProducts :many
 WITH
   SelectedProducts AS (
     SELECT
-      id, name, description, price, images, quantity
+      id, name, description, price, images, quantity,
+      COUNT(*) OVER () AS total_count
     FROM
       products
     ORDER BY
@@ -24,7 +25,7 @@ WITH
       $1
   )
 SELECT
-  id, name, description, price, images, quantity,
+  id, name, description, price, images, quantity, total_count,
   LAST_VALUE(id) OVER () AS last_cursor,
   FIRST_VALUE(id) OVER () AS first_cursor
 FROM
@@ -40,6 +41,7 @@ type GetFirstNProductsRow struct {
 	Price       pgtype.Numeric `db:"price" json:"price"`
 	Images      []string       `db:"images" json:"images"`
 	Quantity    pgtype.Int4    `db:"quantity" json:"quantity"`
+	TotalCount  int64          `db:"total_count" json:"totalCount"`
 	LastCursor  interface{}    `db:"last_cursor" json:"lastCursor"`
 	FirstCursor interface{}    `db:"first_cursor" json:"firstCursor"`
 }
@@ -60,6 +62,7 @@ func (q *Queries) GetFirstNProducts(ctx context.Context, limit int32) ([]GetFirs
 			&i.Price,
 			&i.Images,
 			&i.Quantity,
+			&i.TotalCount,
 			&i.LastCursor,
 			&i.FirstCursor,
 		); err != nil {
@@ -77,7 +80,8 @@ const getLastNProducts = `-- name: GetLastNProducts :many
 WITH
   SelectedProducts AS (
     SELECT
-      id, name, description, price, images, quantity
+      id, name, description, price, images, quantity,
+      COUNT(*) OVER () AS total_count
     FROM
       products
     ORDER BY
@@ -86,7 +90,7 @@ WITH
       $1
   )
 SELECT
-  id, name, description, price, images, quantity,
+  id, name, description, price, images, quantity, total_count,
   LAST_VALUE(id) OVER () AS last_cursor,
   FIRST_VALUE(id) OVER () AS first_cursor
 FROM
@@ -102,6 +106,7 @@ type GetLastNProductsRow struct {
 	Price       pgtype.Numeric `db:"price" json:"price"`
 	Images      []string       `db:"images" json:"images"`
 	Quantity    pgtype.Int4    `db:"quantity" json:"quantity"`
+	TotalCount  int64          `db:"total_count" json:"totalCount"`
 	LastCursor  interface{}    `db:"last_cursor" json:"lastCursor"`
 	FirstCursor interface{}    `db:"first_cursor" json:"firstCursor"`
 }
@@ -122,6 +127,7 @@ func (q *Queries) GetLastNProducts(ctx context.Context, limit int32) ([]GetLastN
 			&i.Price,
 			&i.Images,
 			&i.Quantity,
+			&i.TotalCount,
 			&i.LastCursor,
 			&i.FirstCursor,
 		); err != nil {
@@ -235,7 +241,8 @@ const listNProductsBefore = `-- name: ListNProductsBefore :many
 WITH
   SelectedProducts AS (
     SELECT
-      id, name, description, price, images, quantity
+      id, name, description, price, images, quantity,
+      COUNT(*) OVER () AS total_count
     FROM
       products
     WHERE
@@ -246,7 +253,7 @@ WITH
       $2
   )
 SELECT
-  id, name, description, price, images, quantity,
+  id, name, description, price, images, quantity, total_count,
   LAST_VALUE(id) OVER () AS last_cursor,
   FIRST_VALUE(id) OVER () AS first_cursor
 FROM
@@ -267,6 +274,7 @@ type ListNProductsBeforeRow struct {
 	Price       pgtype.Numeric `db:"price" json:"price"`
 	Images      []string       `db:"images" json:"images"`
 	Quantity    pgtype.Int4    `db:"quantity" json:"quantity"`
+	TotalCount  int64          `db:"total_count" json:"totalCount"`
 	LastCursor  interface{}    `db:"last_cursor" json:"lastCursor"`
 	FirstCursor interface{}    `db:"first_cursor" json:"firstCursor"`
 }
@@ -287,6 +295,7 @@ func (q *Queries) ListNProductsBefore(ctx context.Context, arg ListNProductsBefo
 			&i.Price,
 			&i.Images,
 			&i.Quantity,
+			&i.TotalCount,
 			&i.LastCursor,
 			&i.FirstCursor,
 		); err != nil {

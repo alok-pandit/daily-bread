@@ -34,9 +34,9 @@ const Dashboard = () => {
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
         if (
-          !query.isFetching &&
-          query.data?.pages[query.data.pages.length - 1][0].totalCount !==
-            pageCount
+          Number(query.data?.pages[query.data.pages.length - 1][0].totalCount) >
+            pageCount &&
+          !query.isFetching
         ) {
           query.fetchNextPage()
         }
@@ -62,7 +62,14 @@ const Dashboard = () => {
                 />
               ))
             )}
-            {query.isFetching ? <Spinner full={false} /> : <></>}
+            {query.isFetching &&
+            Number(
+              query.data?.pages[query.data.pages.length - 1][0].totalCount
+            ) != pageCount ? (
+              <Spinner full={false} />
+            ) : (
+              <></>
+            )}
           </Suspense>
         </div>
         {/* <div className="hidden">

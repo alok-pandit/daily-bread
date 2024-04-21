@@ -13,8 +13,9 @@ const nextConfig = {
   experimental: {
     optimizeCss: true,
     swcMinify: true,
-    cpus: 4,
   },
+  reactStrictMode: true,
+  output: "standalone",
 };
 
 export default nextConfig;

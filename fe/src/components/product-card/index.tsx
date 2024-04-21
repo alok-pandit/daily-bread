@@ -27,7 +27,7 @@ const ProductCard = (
       <Image
         src={String(props.product.images[0])}
         alt={'grocery img'}
-        className="-z-20 w-full max-h-full rounded-t-md"
+        className="w-full max-h-full rounded-t-md"
         height={350}
         width={400}
         priority

@@ -3,7 +3,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as Form from '@radix-ui/react-form'
 import { MoonIcon, SunIcon } from '@radix-ui/react-icons'
-import { useQueryClient } from '@tanstack/react-query'
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -15,7 +14,6 @@ import PopupDialog from '../../ui-primitives/dialog'
 import PasswordFormField from '../form-fields/password-form-field'
 import UsernameFormField from '../form-fields/username-form-field'
 
-import { GetProducts } from '@/apis/dashboard'
 import { darkAtom } from '@/atoms'
 import AlertNotification from '@/components/ui-primitives/alerts/alert-notification'
 import ToggleSwitch from '@/components/ui-primitives/toggle-switch'
@@ -39,25 +37,11 @@ const LoginForm = () => {
 
   const loginMutation = useLoginMutation()
 
-  const queryClient = useQueryClient()
-
   const [showAlert, setshowAlert] = useState({ show: false, message: '' })
 
   async function onSubmit(creds: z.infer<typeof formSchema>) {
     const res = await loginMutation.mutateAsync(creds)
     if (res.success) {
-      const payload = {
-        first: 10,
-        last: 0,
-        after: '',
-        before: ''
-      }
-
-      await queryClient.prefetchQuery({
-        queryKey: ['get-products', payload],
-        queryFn: () => GetProducts(payload)
-      })
-
       router.push('/dashboard')
     } else {
       setshowAlert({ show: true, message: String(res) })
