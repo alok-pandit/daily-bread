@@ -1,10 +1,10 @@
 import { Alert } from 'react-native'
 
-import { LoginAPIInputs } from '../codegen'
+import { LoginAPIInput } from '../gen'
 
 import { api } from '.'
 
-export const login = async (creds: LoginAPIInputs) => {
+export const login = async (creds: LoginAPIInput) => {
   return api
     .post('user/login', JSON.stringify(creds))
     .then((r) => r.data)

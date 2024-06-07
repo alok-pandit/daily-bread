@@ -1,7 +1,7 @@
 include .envrc
 
 run-be:
-	cd be && go vet && golangci-lint run src && tygo generate && cp ./../rn/src/codegen/index.ts ./../fe/src/codegen/ && air && rm -rf ./../types && cd ..
+	cd be && go vet && golangci-lint run src && tygo generate && cp ./../rn/src/gen/index.ts ./../fe/src/gen/ && air && rm -rf ./../types && cd ..
 	
 nodemon:
 	cd be && go vet && golangci-lint run src && nodemon --watch './**/*.go' --signal SIGTERM --exec 'go' run main.go && cd ..
@@ -25,7 +25,7 @@ container: build-container
 	make run-container
 
 deploy:
-	cd be && make build-container && docker push alokpandit/hcab && cd ..
+	cd be && make build-container && docker push alokpandit/db && cd ..
 
 migration-create:
 	@read -p "Enter Migration Name (In Snake Case): " name; \

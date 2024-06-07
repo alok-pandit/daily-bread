@@ -5,7 +5,6 @@ import './globals.css'
 import Provider from './providers'
 import { BgMain } from './styles'
 
-
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -19,14 +18,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <Provider>
-      <html lang="en">
-        <body className={inter.className}>
-          <BgMain>
-            {children}
-          </BgMain>
-        </body>
-      </html>
-    </Provider>
+    <html lang="en">
+      <body className={inter.className}>
+        <BgMain>
+          <Provider>{children}</Provider>
+        </BgMain>
+      </body>
+    </html>
   )
 }
