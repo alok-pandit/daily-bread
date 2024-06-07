@@ -8,12 +8,6 @@ const ProductCard = (
   props: any,
   ref?: LegacyRef<HTMLDivElement> | undefined
 ) => {
-  // eslint-disable-next-line no-console
-  console.log(
-    props.product.images,
-    props.product.images.length,
-    props.product.images[0]
-  )
   return (
     <div
       ref={ref}

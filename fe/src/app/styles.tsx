@@ -35,7 +35,8 @@ const bgCls = clmx(
   `flex min-h-screen flex-col text-white`,
   `p-24 items-center justify-center`,
   `bg-[url("/images/light_bg.jpg")] dark:bg-[url("/images/dark_bg.jpg")]`,
-  `bg-cover bg-no-repeat bg-center overflow-hidden`
+  `bg-cover bg-no-repeat bg-center overflow-hidden`,
+  `overflow-y-hidden max-h-screen`
 )
 
 export const BgMain = w.main(bgCls)
