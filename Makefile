@@ -59,10 +59,11 @@ rn-android:
 tnl:
 	ngrok http --domain=${ngrok_static_url} ${port}
 
-fe:
-	cd fe && pnpm dev
+run-fe:
+	cd fe && pnpm dev && cd ..
+
 start:
-	docker compose up -d && ttab 'make run-be' && ttab 'make rn-start' && ttab 'make rn-android' && ttab 'make tnl'
+	docker compose up -d && ttab 'make run-be' && ttab 'make rn-start' && ttab 'make rn-android' && ttab 'make tnl' && ttab 'make run-fe'
 
 initial-setup: tidy
 	cd rn && npm i && cd .. && sudo snap install sqlc && curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sudo sh -s -- -b $(go env GOPATH)/bin v1.57.2 && go install github.com/gzuidhof/tygo@latest && go install github.com/air-verse/air@latest && go install github.com/swaggo/swag/cmd/swag@latest
