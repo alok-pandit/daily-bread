@@ -9,6 +9,7 @@ import (
 	"github.com/alok-pandit/daily-bread/src/db/gen"
 	_ "github.com/alok-pandit/daily-bread/src/docs"
 	"github.com/alok-pandit/daily-bread/src/routes"
+	"github.com/goccy/go-json"
 	"github.com/gofiber/contrib/websocket"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cache"
@@ -23,7 +24,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/gofiber/storage/rueidis"
 	"github.com/gofiber/swagger"
-	"github.com/segmentio/encoding/json"
 )
 
 func Initialize() {
