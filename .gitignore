@@ -1,3 +1,4 @@
 node_modules
 .turbo
 **/tmp/**
+rn/src/gen/*
