@@ -98,7 +98,14 @@ services:
       interval: 5s
       timeout: 5s
       retries: 12
-
+  nats:
+    image: nats:latest
+    network_mode: "host"
+    restart: unless-stopped
+    ports:
+      - 4222:4222
+      - "8222:8222" # JetStream HTTP port (optional)
+    command: "--jetstream"
   # db-scylla:
   #   image: scylladb/scylla
   #   network_mode: "host"
@@ -154,3 +161,6 @@ volumes:
   # readyset: ~
   data:
     driver: local
+
+networks:
+  nats-net:

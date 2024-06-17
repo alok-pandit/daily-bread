@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/gofiber/contrib/fiberzerolog"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cache"
 	"github.com/gofiber/fiber/v2/middleware/compress"
@@ -17,6 +18,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/gofiber/storage/rueidis"
+	"github.com/rs/zerolog"
 )
 
 func GetApp() *fiber.App {
@@ -76,12 +78,12 @@ func GetApp() *fiber.App {
 
 	app.Use(requestid.New())
 
-	// logger := zerolog.New(os.Stderr).With().Timestamp().Logger()
+	logger := zerolog.New(os.Stderr).With().Timestamp().Logger()
 
-	// app.Use(fiberzerolog.New(fiberzerolog.Config{
-	// 	Logger: &logger,
-	// 	Fields: []string{"ip", "port", "latency", "time", "status", "${locals:requestid}", "method", "url", "error"},
-	// }))
+	app.Use(fiberzerolog.New(fiberzerolog.Config{
+		Logger: &logger,
+		Fields: []string{"ip", "port", "latency", "time", "status", "${locals:requestid}", "method", "url", "error"},
+	}))
 
 	// } else {
 
@@ -92,6 +94,7 @@ func GetApp() *fiber.App {
 	app.Use(recover.New())
 
 	app.Use(cors.New(cors.Config{
+		AllowOrigins:     "https://loyal-marginally-turtle.ngrok-free.app",
 		AllowCredentials: true,
 	}))
 
