@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/go-redis/redis/v8"
 	"github.com/gofiber/contrib/fiberzerolog"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cache"
@@ -20,6 +21,8 @@ import (
 	"github.com/gofiber/storage/rueidis"
 	"github.com/rs/zerolog"
 )
+
+var RedisClient *redis.Client
 
 func GetApp() *fiber.App {
 
@@ -105,6 +108,11 @@ func GetApp() *fiber.App {
 	}))
 
 	app.Use(healthcheck.New())
+
+	RedisClient = redis.NewClient(&redis.Options{
+		Addr: "localhost:6379",
+		DB:   9,
+	})
 
 	return app
 

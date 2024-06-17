@@ -19,6 +19,6 @@ func WsRouter(router fiber.Router) {
 
 	router.Use("/", handlers.WsUpgradeHandler)
 
-	router.Get("/:id<string>/:room_id<string>/:type<string>/:nonce<int>?", websocket.New(handlers.WebSocketHandler, cfg))
+	router.Get("/:user_id<string>/:room_id<string>/:type<string>?/:nonce<int>?", websocket.New(handlers.WebSocketHandler, cfg))
 
 }

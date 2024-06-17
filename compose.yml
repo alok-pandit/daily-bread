@@ -161,6 +161,3 @@ volumes:
   # readyset: ~
   data:
     driver: local
-
-networks:
-  nats-net:
