@@ -24,8 +24,6 @@ func Initialize() {
 
 	db.Sqlc = gen.New(pool)
 
-	app.Group("/ws").Route("/", routes.WsRouter)
-
 	api := app.Group("/api")
 
 	api.Group("/user").Route("/", routes.UserRouter)

@@ -27,6 +27,10 @@ require (
 	github.com/go-redis/redis/v8 v8.11.5 // indirect
 	github.com/gofiber/contrib/fiberzerolog v1.0.1 // indirect
 	github.com/gofiber/utils/v2 v2.0.0-beta.3 // indirect
+	github.com/gofrs/uuid v4.4.0+incompatible // indirect
+	github.com/gomodule/redigo v1.9.2 // indirect
+	github.com/googollee/go-socket.io v1.7.0 // indirect
+	github.com/gorilla/websocket v1.5.3 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
 	github.com/jackc/puddle/v2 v2.2.1 // indirect
