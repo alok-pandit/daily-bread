@@ -22,7 +22,10 @@ const socketInit = (socket: Socket) => {
     socket.data.room_id = room_id
     socket
       .to(socket.data.room_id)
-      .emit(`${socket.data.username || 'unnamed person'} joined the room`)
+      .emit(
+        'msg',
+        `${socket.data.username || 'unnamed person'} joined the room`
+      )
   })
 
   socket.on('leave_room', (room_id: string) => {
