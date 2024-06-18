@@ -10,6 +10,13 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+type Message struct {
+	Msg    string `json:"msg"`
+	Handle string `json:"handle"`
+	RoomID string `json:"room_id"`
+	UserID string `json:"user_id"`
+}
+
 var connectedClients = make(map[string]*websocket.Conn)       // Map username to connection
 var roomClients = make(map[string]map[string]*websocket.Conn) // Map room ID to map of username to connection (mutex protected)
 
@@ -19,9 +26,9 @@ func WebSocketHandler(c *websocket.Conn) {
 	defer app.RedisClient.Close()
 
 	room_id := c.Params("room_id")
-	user_id := c.Params("user_id")
 	subscriber := app.RedisClient.Subscribe(context.Background(), room_id)
 
+	go manageRoom(c)
 	go subscription(c, subscriber)
 
 	var (
@@ -43,16 +50,11 @@ func WebSocketHandler(c *websocket.Conn) {
 			log.Println("publish:", err)
 		}
 
-		if roomClients[room_id][c.Params("user_id")] == nil ||
-			connectedClients[user_id] == nil ||
-			roomClients[room_id] == nil {
-			go manageRoom(c)
-		}
-
 	}
 }
 
 func manageRoom(c *websocket.Conn) {
+
 	user_id := c.Params("user_id")
 
 	room_id := c.Params("room_id")
@@ -62,15 +64,12 @@ func manageRoom(c *websocket.Conn) {
 		roomClients[room_id] = make(map[string]*websocket.Conn)
 	}
 	roomClients[room_id][user_id] = c
-
 }
 
 func deliverMessages(msg []byte, c *websocket.Conn) {
-
 	if err := c.WriteMessage(2, msg); err != nil {
 		log.Println("write:", err)
 	}
-
 }
 
 func subscription(c *websocket.Conn, subscriber *redis.PubSub) {
@@ -81,7 +80,13 @@ func subscription(c *websocket.Conn, subscriber *redis.PubSub) {
 			log.Println("subscribe:", err)
 		}
 
-		go deliverMessages([]byte(m.Payload), c)
+		room_id := c.Params("room_id")
+		user_id := c.Params("user_id")
+		for uname, con := range roomClients[room_id] {
+			if uname != user_id {
+				go deliverMessages([]byte(m.Payload), con)
+			}
+		}
 	}
 }
 
