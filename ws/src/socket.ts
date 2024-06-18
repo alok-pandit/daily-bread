@@ -2,8 +2,6 @@
 import { Socket } from 'socket.io'
 
 const socketInit = (socket: Socket) => {
-  console.log(socket.id)
-
   socket.conn.once('upgrade', () => {
     // called when the transport is upgraded (i.e. from HTTP long-polling to WebSocket)
     console.log('upgraded transport', socket.conn.transport.name) // prints "websocket"

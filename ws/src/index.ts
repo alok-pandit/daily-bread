@@ -15,10 +15,7 @@ const redisClient = new Redis({
 
 // INFO: Do not pass a custom parser. That causes problems.
 const io = new Server({
-  adapter: createAdapter(redisClient),
-  cors: {
-    origin: '*'
-  }
+  adapter: createAdapter(redisClient)
 })
 
 io.attachApp(app)

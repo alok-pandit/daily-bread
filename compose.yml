@@ -80,7 +80,7 @@ services:
   #     RS_GRAFANA_PORT: 4000
 
   postgres:
-    image: postgres:16.3-alpine3.20
+    image: postgres:16
     network_mode: "host"
     restart: unless-stopped
     volumes:
@@ -98,6 +98,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 12
+
   nats:
     image: nats:latest
     network_mode: "host"

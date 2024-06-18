@@ -32,6 +32,12 @@ dependencies:
   axios:
     specifier: 1.6.8
     version: 1.6.8
+  cd:
+    specifier: ^0.3.3
+    version: 0.3.3
+  daily-bread:
+    specifier: link:..
+    version: link:..
   framer-motion:
     specifier: 11.0.28
     version: 11.0.28(react-dom@18.2.0)(react@18.2.0)
@@ -48,7 +54,7 @@ dependencies:
     specifier: 14.2.3
     version: 14.2.3(react-dom@18.2.0)(react@18.2.0)
   next-themes:
-    specifier: ^0.3.0
+    specifier: 0.3.0
     version: 0.3.0(react-dom@18.2.0)(react@18.2.0)
   react:
     specifier: 18.2.0
@@ -74,7 +80,7 @@ devDependencies:
     specifier: 9.0.0
     version: 9.0.0
   '@types/node':
-    specifier: 20.12.7
+    specifier: ^20.12.7
     version: 20.12.7
   '@types/react':
     specifier: 18.2.78
@@ -1705,6 +1711,10 @@ packages:
 
   /caniuse-lite@1.0.30001610:
     resolution: {integrity: sha512-QFutAY4NgaelojVMjY63o6XlZyORPaLfyMnsl3HgnWdJUcX6K0oaJymHjH8PT5Gk7sTm8rvC/c5COUQKXqmOMA==}
+    dev: false
+
+  /cd@0.3.3:
+    resolution: {integrity: sha512-X2y0Ssu48ucdkrNgCdg6k3EZWjWVy/dsEywUUTeZEIW31f3bQfq65Svm+TzU1Hz+qqhdmyCdjGhUvRsSKHl/mw==}
     dev: false
 
   /chalk@4.1.2:
