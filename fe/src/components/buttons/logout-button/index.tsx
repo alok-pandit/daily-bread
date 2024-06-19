@@ -1,33 +1,25 @@
 'use client'
 
-// import { useRouter } from 'next/navigation'
-// import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
-// import { useLogoutQuery } from '@/codegen/gen/hooks/queries.hooks'
 import Button from '@/components/ui-primitives/button'
+import useLogoutMutation from '@/hooks/logout'
 
 const LogoutButton = () => {
-  // const router = useRouter()
+  const router = useRouter()
 
-  // const [{ data: logoutData }, reexecuteQuery] = useLogoutQuery({
-  //   pause: true,
-  //   requestPolicy: 'network-only'
-  // })
+  const { data, mutate } = useLogoutMutation()
 
-  // useEffect(() => {
-  //   if (logoutData?.logout.success) {
-  //     router.replace('/')
-  //   }
-  // }, [logoutData, logoutData?.logout, router])
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.dir(data)
+    if (data?.success) {
+      router.replace('/')
+    }
+  }, [data, data?.success, router])
 
-  return (
-    <Button
-      title={'Logout'}
-      onClick={() => {
-        // reexecuteQuery()
-      }}
-    />
-  )
+  return <Button title={'Logout'} onClick={mutate} />
 }
 
 export default LogoutButton

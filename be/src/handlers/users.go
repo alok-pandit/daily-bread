@@ -99,8 +99,9 @@ func RefreshToken(c *fiber.Ctx) error {
 
 	// If the refresh token is not found, return an unauthorized error
 	if len(token) == 0 {
-		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"error": "Refresh token not found",
+		return c.Status(fiber.StatusUnauthorized).JSON(models.ErrorResponse{
+			Success: false,
+			Message: "Refresh token not found",
 		})
 	}
 
@@ -110,15 +111,17 @@ func RefreshToken(c *fiber.Ctx) error {
 
 	// If the token has expired, return a bad request error
 	if time.Now().Compare(payload.ExpiresAt) > 0 {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "Refresh token expired",
+		return c.Status(fiber.StatusBadRequest).JSON(models.ErrorResponse{
+			Success: false,
+			Message: "Refresh token expired",
 		})
 	}
 
 	// If there is an error decrypting the token, return a bad request error
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "Invalid refresh token",
+		return c.Status(fiber.StatusBadRequest).JSON(models.ErrorResponse{
+			Success: false,
+			Message: err.Error(),
 		})
 	}
 
@@ -127,15 +130,17 @@ func RefreshToken(c *fiber.Ctx) error {
 
 	// If there is an error getting the user's refresh token, return a bad request error
 	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "Invalid refresh token",
+		return c.Status(fiber.StatusBadRequest).JSON(models.ErrorResponse{
+			Success: false,
+			Message: err.Error(),
 		})
 	}
 
 	// If the token in the database does not match the token in the request, return a bad request error
 	if t.String != token {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "Invalid refresh token",
+		return c.Status(fiber.StatusBadRequest).JSON(models.ErrorResponse{
+			Success: false,
+			Message: "Invalid Refresh Token",
 		})
 	}
 
@@ -250,13 +255,13 @@ func Login(c *fiber.Ctx) error {
 	}
 
 	// Set the new refresh token as a cookie in the response
-	// c.Cookie(&fiber.Cookie{
-	// 	Name:     "refresh_token",
-	// 	Path:     "/",
-	// 	Value:    refreshToken,
-	// 	HTTPOnly: true,
-	// 	Expires:  time.Now().Add(time.Minute * 60 * 24 * 365),
-	// })
+	c.Cookie(&fiber.Cookie{
+		Name:     "refresh_token",
+		Path:     "/",
+		Value:    refreshToken,
+		HTTPOnly: true,
+		Expires:  time.Now().Add(time.Minute * 60 * 24 * 365),
+	})
 
 	// Set the new token as a cookie in the response
 	c.Cookie(&fiber.Cookie{
@@ -264,7 +269,7 @@ func Login(c *fiber.Ctx) error {
 		Path:     "/",
 		Value:    encryptedToken,
 		HTTPOnly: true,
-		Expires:  time.Now().Add(time.Minute * 15),
+		Expires:  time.Now().Add(time.Hour * 12),
 	})
 
 	resp := models.LoginAPIResponse{
@@ -324,11 +329,39 @@ func GetUserByID(c *fiber.Ctx) error {
 		})
 	}
 
-	response := models.UserPublicDetails{
-		Fullname: user.Fullname,
-		Username: user.Username,
+	response := models.GetUserByIDResponse{
+		Success: true,
+		UserDetails: models.UserPublicDetails{
+			Fullname: user.Fullname,
+			Username: user.Username,
+		},
 	}
 
 	return c.Status(fiber.StatusOK).JSON(response)
+
+}
+
+func Logout(c *fiber.Ctx) error {
+
+	c.Cookie(&fiber.Cookie{
+		Name:     "token",
+		Path:     "/",
+		Value:    "",
+		HTTPOnly: true,
+		Expires:  time.Now().Add(-time.Hour * 12),
+	})
+
+	c.Cookie(&fiber.Cookie{
+		Name:     "refresh_token",
+		Path:     "/",
+		Value:    "",
+		HTTPOnly: true,
+		Expires:  time.Now().Add(-time.Hour * 12),
+	})
+
+	return c.Status(fiber.StatusOK).JSON(models.CreateUserResponse{
+		Success: true,
+		Message: "Logged out successfully",
+	})
 
 }

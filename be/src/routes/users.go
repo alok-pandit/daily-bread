@@ -21,9 +21,12 @@ func UserRouter(router fiber.Router) {
 	// Group /secure routes under a middleware that checks for a valid PASETO token.
 	secure := router.Group("/secure", utils.GetPasetoConfig())
 
+	secure.Get("/logout-now", handlers.Logout)
+
 	// GET /secure/ lists all users. Requires a valid PASETO token.
 	secure.Get("/", handlers.GetAllUsers)
 
 	// GET /secure/:id retrieves a specific user by ID. Requires a valid PASETO token.
 	secure.Get("/:id", handlers.GetUserByID)
+
 }

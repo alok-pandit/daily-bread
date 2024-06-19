@@ -6,6 +6,7 @@ import Loading from '../loading'
 
 import { Nav } from './styles'
 
+import LogoutButton from '@/components/buttons/logout-button'
 import ProductCard from '@/components/product-card'
 import Spinner from '@/components/spinner'
 import DashboardHooks from '@/hooks/dashboard'
@@ -14,7 +15,7 @@ const Dashboard = () => {
   const { data, error, isFetching, fetchNextPage } =
     DashboardHooks.useGetProducts()
   const cardRef = useRef(null)
- 
+
   const pageCount = useMemo(
     () => Number(process.env.NEXT_PUBLIC_PAGE_COUNT),
     []
@@ -40,15 +41,14 @@ const Dashboard = () => {
   }, [pageCount, fetchNextPage, data?.pages, isFetching])
 
   const { data: userData, error: userError } =
-  DashboardHooks.useGetUserDetailsByID()
+    DashboardHooks.useGetUserDetailsByID()
 
   if (error) {
-    return <h1>Error</h1>
+    return <h1>Error Fetching products</h1>
   }
 
-
   if (userError) {
-    return <h1>User Error</h1>
+    return <h1>Error fetching user details</h1>
   }
 
   // eslint-disable-next-line no-console
@@ -56,7 +56,10 @@ const Dashboard = () => {
 
   return (
     <>
-      <Nav />
+      <Nav>
+        {`Welcome ${(userData && userData.user_details && userData?.user_details.fullname) ?? ''}`}
+        <LogoutButton />
+      </Nav>
       <div className="w-screen max-h-screen overflow-y-auto p-4 overflow-x-hidden">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 pt-16">
           <Suspense fallback={<Loading />}>

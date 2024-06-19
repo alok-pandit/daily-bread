@@ -1,6 +1,7 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 
-import { GetProducts, GetUserByID } from '@/apis/dashboard'
+import { GetProducts } from '@/apis/dashboard'
+import { GetUserByID } from '@/apis/user'
 
 const useGetProducts = () => {
   return useInfiniteQuery({
