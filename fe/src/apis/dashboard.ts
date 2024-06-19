@@ -1,7 +1,7 @@
 'use client'
 import { api } from '.'
 
-import { GetProductsResponse } from '@/codegen'
+import { GetProductsResponse } from '@/gen'
 
 export const GetProducts = async ({
   pageParam

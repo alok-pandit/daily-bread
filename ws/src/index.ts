@@ -13,7 +13,7 @@ const redisClient = new Redis({
   db: 9
 })
 
-// INFO: Do not pass a custom parser. That causes problems.
+// TODO: Check why socket.io-cbor-x-parser is not working
 const io = new Server({
   adapter: createAdapter(redisClient)
 })
@@ -31,5 +31,5 @@ app.listen(Number(process.env.WS_SERVER_PORT), (token) => {
   }
 })
 
-// INFO: This has to be the last line after all initialization has been done.
+// *INFO: Socket Init has to be the last line after all server initialization has been done.
 io.on('connection', socketInit)

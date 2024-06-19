@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 
 import { Login } from '@/apis/login'
-import { LoginAPIInput } from '@/codegen'
+import { LoginAPIInput } from '@/gen'
 
 const useLoginMutation = () => {
   return useMutation({

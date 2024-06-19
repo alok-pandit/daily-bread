@@ -97,7 +97,7 @@ func GetApp() *fiber.App {
 	app.Use(recover.New())
 
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     "https://loyal-marginally-turtle.ngrok-free.app",
+		AllowOrigins:     "http://localhost:3000/",
 		AllowCredentials: true,
 	}))
 

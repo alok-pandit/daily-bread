@@ -1,7 +1,7 @@
 'use server'
 import { api } from '.'
 
-import { CreateUserInput, CreateUserResponse } from '@/codegen'
+import { CreateUserInput, CreateUserResponse } from '@/gen'
 
 export const SignUp = async (
   payload: CreateUserInput

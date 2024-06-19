@@ -1,7 +1,7 @@
 'use server'
 import { api } from '.'
 
-import { LoginAPIInput, LoginAPIResponse } from '@/codegen'
+import { LoginAPIInput, LoginAPIResponse } from '@/gen'
 
 export const Login = async (
   payload: LoginAPIInput

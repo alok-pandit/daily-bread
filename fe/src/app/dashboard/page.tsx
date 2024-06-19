@@ -53,15 +53,18 @@ const Dashboard = () => {
       <div className="w-screen max-h-screen overflow-y-auto p-4 overflow-x-hidden">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 pt-16">
           <Suspense fallback={<Loading />}>
-            {query.data?.pages.map((productPage) =>
-              productPage.map((product, i) => (
-                <ProductCard
-                  product={product}
-                  key={product.id}
-                  ref={i % (Number(pageCount) / 2) === 0 ? cardRef : null}
-                />
-              ))
-            )}
+            {query &&
+              query.data &&
+              query.data.pages.length &&
+              query.data?.pages.map((productPage) =>
+                productPage.map((product, i) => (
+                  <ProductCard
+                    product={product}
+                    key={product.id}
+                    ref={i % (Number(pageCount) / 2) === 0 ? cardRef : null}
+                  />
+                ))
+              )}
             {query.isFetching &&
             Number(
               query.data?.pages[query.data.pages.length - 1][0].totalCount
