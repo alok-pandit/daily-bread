@@ -1,7 +1,7 @@
 'use client'
 import { api } from '.'
 
-import { GetProductsResponse } from '@/gen'
+import { GetProductsResponse, GetUserByIDResponse } from '@/gen'
 
 export const GetProducts = async ({
   pageParam
@@ -17,3 +17,10 @@ export const GetProducts = async ({
     })
     .then((r) => r.data)
     .catch((e) => e.message)
+
+export const GetUserByID = async (id: string): Promise<GetUserByIDResponse> => {
+  return api
+    .get(`user/secure/${id}`)
+    .then((r) => r.data)
+    .catch((e) => e.message)
+}

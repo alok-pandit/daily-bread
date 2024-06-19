@@ -1,6 +1,6 @@
-import { useInfiniteQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 
-import { GetProducts } from '@/apis/dashboard'
+import { GetProducts, GetUserByID } from '@/apis/dashboard'
 
 const useGetProducts = () => {
   return useInfiniteQuery({
@@ -12,4 +12,16 @@ const useGetProducts = () => {
   })
 }
 
-export default useGetProducts
+const useGetUserDetailsByID = () => {
+  return useQuery({
+    queryKey: ['get-user-details-by-id'],
+    queryFn: () => GetUserByID(String(localStorage.getItem('user_id')))
+  })
+}
+
+const DashboardHooks = {
+  useGetProducts,
+  useGetUserDetailsByID
+}
+
+export default DashboardHooks

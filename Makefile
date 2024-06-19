@@ -57,7 +57,7 @@ rn-android:
 	cd rn && pnpm android && cd ..
 
 tnl:
-	ngrok http --domain=${ngrok_static_url} ${port}
+	ngrok http --domain=${ngrok_static_url} ${port} --request-header-add='host: localhost:3000'
 
 run-fe:
 	cd fe && pnpm dev && cd ..

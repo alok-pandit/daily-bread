@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"os"
 	"time"
 
@@ -152,9 +153,9 @@ func RefreshToken(c *fiber.Ctx) error {
 	// Set the new token as a cookie in the response
 	c.Cookie(&fiber.Cookie{
 		Name:     "token",
+		Path:     "/",
 		Value:    encryptedToken,
 		HTTPOnly: true,
-		Secure:   true,
 		Expires:  time.Now().Add(time.Minute * 15),
 	})
 
@@ -248,27 +249,27 @@ func Login(c *fiber.Ctx) error {
 		})
 	}
 
+	// Set the new refresh token as a cookie in the response
+	// c.Cookie(&fiber.Cookie{
+	// 	Name:     "refresh_token",
+	// 	Path:     "/",
+	// 	Value:    refreshToken,
+	// 	HTTPOnly: true,
+	// 	Expires:  time.Now().Add(time.Minute * 60 * 24 * 365),
+	// })
+
 	// Set the new token as a cookie in the response
 	c.Cookie(&fiber.Cookie{
 		Name:     "token",
+		Path:     "/",
 		Value:    encryptedToken,
 		HTTPOnly: true,
-		Secure:   true,
 		Expires:  time.Now().Add(time.Minute * 15),
-	})
-
-	// Set the new refresh token as a cookie in the response
-	c.Cookie(&fiber.Cookie{
-		Name:     "refresh_token",
-		Value:    refreshToken,
-		HTTPOnly: true,
-		Secure:   true,
-		Expires:  time.Now().Add(time.Minute * 60 * 24 * 365),
 	})
 
 	resp := models.LoginAPIResponse{
 		Success: true,
-		Message: "",
+		Message: row.ID,
 	}
 	// Return a success message
 	return c.Status(fiber.StatusOK).JSON(resp)
@@ -298,28 +299,36 @@ func GetAllUsers(c *fiber.Ctx) error {
 }
 
 // GetUserByID godoc
-// @Summary Get a user by ID
-// @Description Get a user by ID
+// @Summary Get user by ID
+// @Description Get user by ID from the database
 // @Tags users
 // @Accept json
 // @Produce json
 // @Param id path string true "User ID"
-// @Success 200 {object} models.User
-// @Failure 404 {object} map[string]interface{}
-// @Failure 500 {object} map[string]interface{}
+// @Success 200 {object} models.UserPublicDetails "User details"
+// @Failure 400 {object} map[string]interface{} "Bad request"
+// @Failure 500 {object} map[string]interface{} "Internal server error"
 // @Router /api/user/{id} [get]
 func GetUserByID(c *fiber.Ctx) error {
 
 	id := c.Params("id")
 
+	fmt.Println("ID: ", id)
+
 	user, err := db.Sqlc.GetUserByID(c.Context(), id)
 
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": err.Error(),
+		return c.Status(fiber.StatusInternalServerError).JSON(models.ErrorResponse{
+			Success: false,
+			Message: err.Error(),
 		})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(user)
+	response := models.UserPublicDetails{
+		Fullname: user.Fullname,
+		Username: user.Username,
+	}
+
+	return c.Status(fiber.StatusOK).JSON(response)
 
 }

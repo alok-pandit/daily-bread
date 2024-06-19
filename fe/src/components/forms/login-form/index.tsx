@@ -42,6 +42,7 @@ const LoginForm = () => {
   async function onSubmit(creds: z.infer<typeof formSchema>) {
     const res = await loginMutation.mutateAsync(creds)
     if (res.success) {
+      localStorage.setItem('user_id', res.message)
       router.push('/dashboard')
     } else {
       setshowAlert({ show: true, message: String(res) })
