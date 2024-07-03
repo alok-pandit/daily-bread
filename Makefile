@@ -1,7 +1,7 @@
 include .envrc
 
 run-be:
-	cd be && go vet && golangci-lint run src && tygo generate && cp ./../rn/src/gen/index.ts ./../fe/src/gen/ && air && rm -rf ./../types && cd ..
+	cd be && air && cp ./../rn/src/gen/index.ts ./../fe/src/gen/ && rm -rf ./../types && cd ..
 	
 nodemon:
 	cd be && go vet && golangci-lint run src && nodemon --watch './**/*.go' --signal SIGTERM --exec 'go' run main.go && cd ..
