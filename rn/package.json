@@ -1,4 +1,4 @@
-{
+{ 
   "name": "rn",
   "version": "0.0.1",
   "private": true,
@@ -13,7 +13,6 @@
     "prettier-watch": "onchange 'src/**/*.{js,ts,jsx,tsx}' -- prettier --write {{changed}}"
   },
   "dependencies": {
-    "-": "0.0.1",
     "@react-native-community/cli-platform-android": "13.6.9",
     "@react-native-community/cli-platform-ios": "13.6.9",
     "@react-native/metro-config": "0.74.85",
@@ -76,7 +75,7 @@
     "moduleFileExtensions": [
       "ts",
       "tsx",
-      "js",
+      "js", 
       "jsx",
       "json",
       "node"
