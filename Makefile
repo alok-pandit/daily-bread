@@ -50,6 +50,9 @@ sqlc-gen: sqlc-compile
 swag-doc:
 	cd be && swag init -g main.go --output src/docs && cd ..
 
+start-emulator:
+	emulator @Pixel_8_Pro_API_35 
+
 rn-start:
 	cd rn && pnpm start && cd ..
 
