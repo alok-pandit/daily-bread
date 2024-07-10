@@ -7,5 +7,5 @@ import { api } from '.'
 export const login = async (inputs: CreateUserInput) =>
   api
     .post('users', inputs)
-    .then((r) => r.data)
-    .catch((e) => Alert.alert('Error', e.message))
+    .then(r => r.data)
+    .catch(e => Alert.alert('Error', e.message))
