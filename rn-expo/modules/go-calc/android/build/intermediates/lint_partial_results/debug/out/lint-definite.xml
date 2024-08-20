@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<incidents format="6" by="lint 8.2.1" type="incidents">
+
+    <incident
+        id="ViewConstructor"
+        severity="warning"
+        message="Custom view `GoCalcView` is missing constructor used by tools: `(Context)` or `(Context,AttributeSet)` or `(Context,AttributeSet,int)`">
+        <location
+            file="${:go-calc*debug*MAIN*sourceProvider*0*javaDir*0}/expo/modules/gocalc/GoCalcView.kt"
+            line="7"
+            column="7"
+            startOffset="147"
+            endLine="7"
+            endColumn="17"
+            endOffset="157"/>
+    </incident>
+
+</incidents>

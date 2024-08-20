@@ -34,7 +34,7 @@ func GetApp() *fiber.App {
 		JSONDecoder:  json.Unmarshal,
 	})
 
-	// *INFO: CORS has to be the first middleware. Spent a whole day trying to figure out why sometimes it works and randomly sometimes it doesn't. Turns out, just had to make this the first midlleware!!!
+	// *INFO: CORS has to be the first middleware. Spent a whole day trying to figure out why sometimes it works and randomly sometimes it doesn't. Turns out, just had to make this the first middleware!!!
 	app.Use(cors.New(cors.Config{
 		AllowOrigins:     "http://localhost:3000/",
 		AllowCredentials: true,

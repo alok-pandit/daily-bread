@@ -13,8 +13,8 @@ import (
 func Config() *pgxpool.Config {
 
 	const defaultMaxConns = int32(200)
-	const defaultMinConns = int32(0)
-	const defaultMaxConnLifetime = time.Hour * 1
+	const defaultMinConns = int32(1)
+	const defaultMaxConnLifetime = time.Minute * 15
 	const defaultMaxConnIdleTime = time.Minute * 30
 	const defaultHealthCheckPeriod = time.Minute * 1
 	const defaultConnectTimeout = time.Second * 5
