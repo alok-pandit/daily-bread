@@ -1,5 +1,7 @@
 node_modules
 .turbo
 **/tmp/**
+**/build/**
 rn/src/gen/*
 be/tmp
+rn-expo/modules/go-calc/android/build
